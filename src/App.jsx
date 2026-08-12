@@ -1926,16 +1926,23 @@ export default function App() {
           </div>
         </div>
       ) : (
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: COLORS.cream }}>
-          <div className="screen-anim" key={tab} style={{ flex: 1 }}>{screens[tab]}</div>
-          <div style={{ display: 'flex', background: `linear-gradient(135deg, ${COLORS.red}, ${COLORS.darkRed})`, paddingBottom: 10, paddingTop: 8, boxShadow: '0 -4px 12px rgba(0,0,0,0.3)', position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100 }}>
+        <div style={{ minHeight: '100vh', display: 'flex', background: COLORS.cream }}>
+          <div style={{ width: 64, flexShrink: 0, background: `linear-gradient(180deg, ${COLORS.red} 0%, ${COLORS.darkRed} 100%)`, padding: '16px 6px', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '2px 0 12px rgba(0,0,0,0.25)', position: 'fixed', top: 0, bottom: 0, left: 0, zIndex: 100 }}>
+            <div style={{ fontSize: fs(24), marginBottom: 18 }}>🇮🇩</div>
             {tabs.map(t => (
-              <button key={t.key} onClick={() => setTab(t.key)} style={{ flex: 1, textAlign: 'center', padding: '6px 0', cursor: 'pointer', border: 'none', background: 'none', color: tab === t.key ? COLORS.gold : COLORS.white, fontSize: fs(10), fontWeight: tab === t.key ? 'bold' : 'normal', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                <span style={{ fontSize: fs(20), lineHeight: 1 }}>{t.icon}</span>
-                <span>{t.label}</span>
+              <button
+                key={t.key}
+                onClick={() => setTab(t.key)}
+                className={`nav-btn${tab === t.key ? ' on' : ''}`}
+                title={t.label}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 48, height: 48, marginBottom: 6, borderRadius: 12, border: 'none', cursor: 'pointer' }}
+              >
+                <div className="nav-icon" style={{ fontSize: fs(22), lineHeight: 1, transition: '0.2s' }}>{t.icon}</div>
               </button>
             ))}
+            <div style={{ marginTop: 'auto', fontSize: fs(14) }}>🎖️</div>
           </div>
+          <div className="screen-anim" key={tab} style={{ flex: 1, marginLeft: 64 }}>{screens[tab]}</div>
         </div>
       )}
     </>
