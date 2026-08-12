@@ -227,16 +227,18 @@ const PESERTA_LIST = [
   { id: '42', nama: 'Rafif', jk: 'L', grup: 'Pra-remaja', lomba: '', rt: '', no: '' },
 ];
 
+const fs = (n) => Math.round(n * 1.18);
+
 const s = {
   container: { minHeight: '100vh', display: 'flex', flexDirection: 'column', background: COLORS.cream },
-  header: { background: `linear-gradient(135deg, ${COLORS.red}, ${COLORS.darkRed})`, paddingTop: 50, paddingBottom: 30, textAlign: 'center', borderBottomLeftRadius: 30, borderBottomRightRadius: 30 },
-  headerTitle: { fontSize: 32, fontWeight: 'bold', color: COLORS.white, letterSpacing: 4 },
-  headerSub: { fontSize: 14, color: COLORS.white, marginTop: 4, letterSpacing: 2 },
-  headerYear: { fontSize: 18, fontWeight: 'bold', color: COLORS.gold, marginTop: 10, letterSpacing: 3 },
+  header: { background: `linear-gradient(135deg, ${COLORS.red} 0%, ${COLORS.darkRed} 60%, #8B0000 100%)`, paddingTop: 50, paddingBottom: 30, textAlign: 'center', borderBottomLeftRadius: 30, borderBottomRightRadius: 30, boxShadow: '0 4px 20px rgba(204,0,0,0.3)', position: 'relative' },
+  headerTitle: { fontSize: fs(34), fontWeight: 'bold', color: COLORS.white, letterSpacing: 4, textShadow: '0 2px 8px rgba(0,0,0,0.3)' },
+  headerSub: { fontSize: fs(14), color: 'rgba(255,255,255,0.9)', marginTop: 6, letterSpacing: 3 },
+  headerYear: { fontSize: fs(18), fontWeight: 'bold', color: COLORS.gold, marginTop: 12, letterSpacing: 3 },
   card: { background: COLORS.white, borderRadius: 16, padding: 20, margin: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' },
-  sectionTitle: { fontSize: 22, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 15, padding: '0 16px' },
-  badge: (color) => ({ background: color, color: COLORS.white, padding: '4px 10px', borderRadius: 12, fontSize: 12, fontWeight: 'bold' }),
-  tab: { flex: 1, textAlign: 'center', padding: '8px 0', cursor: 'pointer', border: 'none', background: 'none', color: COLORS.white, fontSize: 11, fontWeight: 'bold' },
+  sectionTitle: { fontSize: fs(24), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 15, padding: '0 16px' },
+  badge: (color) => ({ background: color, color: COLORS.white, padding: '4px 10px', borderRadius: 12, fontSize: fs(12), fontWeight: 'bold' }),
+  tab: { flex: 1, textAlign: 'center', padding: '8px 0', cursor: 'pointer', border: 'none', background: 'none', color: COLORS.white, fontSize: fs(11), fontWeight: 'bold' },
   tabActive: { color: COLORS.gold },
 };
 
@@ -263,9 +265,9 @@ const downloadPdf = (filename, title, subtitle, columns, rows, footRows, extra) 
     head: [columns],
     body: rows,
     foot: footRows && footRows.length ? [footRows] : undefined,
-    headStyles: { fillColor: [204, 0, 0], fontSize: 9 },
-    footStyles: { fillColor: [51, 51, 51], fontSize: 9 },
-    styles: { fontSize: 9, cellPadding: 2.5 },
+    headStyles: { fillColor: [204, 0, 0], fontSize: fs(9) },
+    footStyles: { fillColor: [51, 51, 51], fontSize: fs(9) },
+    styles: { fontSize: fs(9), cellPadding: 2.5 },
     margin: { left: 14, right: 14 },
     ...extra,
   });
@@ -303,42 +305,45 @@ function HomeScreen({ onNavigate }) {
   return (
     <div style={{ paddingBottom: 20 }}>
       <div style={s.header}>
-        <div style={{ fontSize: 60 }}>🇮🇩</div>
+        <div style={{ fontSize: fs(60), marginBottom: 6, filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.35))' }}>🇮🇩</div>
         <div style={s.headerTitle}>DIRGAHAYU RI</div>
         <div style={s.headerSub}>REPUBLIK INDONESIA</div>
         <div style={s.headerYear}>17 AGUSTUS 2026</div>
       </div>
 
-      <div style={s.card}>
-        <div style={{ textAlign: 'center', fontSize: 12, color: COLORS.gray }}>Hitung Mundur Menuju</div>
-        <div style={{ textAlign: 'center', fontSize: 22, fontWeight: 'bold', color: COLORS.red, marginBottom: 15 }}>HARI KEMERDEKAAN</div>
-        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-          {[['Hari', cd.d], ['Jam', cd.h], ['Menit', cd.m], ['Detik', cd.s]].map(([l, v]) => (
-            <div key={l} style={{ textAlign: 'center', background: COLORS.lightGray, borderRadius: 10, padding: '12px 14px', minWidth: 70 }}>
-              <div style={{ fontSize: 28, fontWeight: 'bold', color: COLORS.red }}>{String(v).padStart(2, '0')}</div>
-              <div style={{ fontSize: 11, color: COLORS.gray, marginTop: 4 }}>{l}</div>
-            </div>
-          ))}
+      <div style={{ margin: 16, marginBottom: 4 }}>
+        <div style={{ background: `linear-gradient(135deg, ${COLORS.white}, #FFF3E0)`, borderRadius: 20, padding: 20, boxShadow: '0 6px 24px rgba(204,0,0,0.12)', border: '1px solid rgba(204,0,0,0.12)' }}>
+          <div style={{ textAlign: 'center', fontSize: fs(13), color: COLORS.gray, letterSpacing: 1 }}>HITUNG MUNDUR MENUJU</div>
+          <div style={{ textAlign: 'center', fontSize: fs(24), fontWeight: 'bold', color: COLORS.red, margin: '6px 0 16px' }}>🎊 HARI KEMERDEKAAN 🎊</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
+            {[['Hari', cd.d], ['Jam', cd.h], ['Menit', cd.m], ['Detik', cd.s]].map(([l, v]) => (
+              <div key={l} style={{ textAlign: 'center', background: `linear-gradient(135deg, ${COLORS.red}, ${COLORS.darkRed})`, borderRadius: 14, padding: '14px 6px', boxShadow: '0 4px 12px rgba(204,0,0,0.35)' }}>
+                <div style={{ fontSize: fs(30), fontWeight: 'bold', color: COLORS.white, lineHeight: 1.1 }}>{String(v).padStart(2, '0')}</div>
+                <div style={{ fontSize: fs(11), color: 'rgba(255,255,255,0.85)', marginTop: 4 }}>{l}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       <div style={{ padding: '0 16px' }}>
         <div style={s.sectionTitle}>Menu Utama</div>
-        {menuItems.map((item) => (
-          <div key={item.key} onClick={() => onNavigate(item.key)} style={{ display: 'flex', alignItems: 'center', background: COLORS.white, borderRadius: 16, padding: 16, marginBottom: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
-            <div style={{ width: 50, height: 50, borderRadius: 25, background: COLORS.red, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>{item.icon}</div>
-            <div style={{ flex: 1, marginLeft: 15 }}>
-              <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.darkGray }}>{item.title}</div>
-              <div style={{ fontSize: 12, color: COLORS.gray, marginTop: 2 }}>{item.desc}</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+          {menuItems.map((item) => (
+            <div key={item.key} onClick={() => onNavigate(item.key)} style={{ display: 'flex', alignItems: 'center', background: COLORS.white, borderRadius: 16, padding: 14, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', cursor: 'pointer', transition: 'transform 0.15s ease, box-shadow 0.15s ease', border: '1px solid rgba(0,0,0,0.04)' }}>
+              <div style={{ width: 48, height: 48, borderRadius: 14, background: `linear-gradient(135deg, ${COLORS.red}, ${COLORS.darkRed})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: fs(24), flexShrink: 0, boxShadow: '0 3px 8px rgba(204,0,0,0.3)' }}>{item.icon}</div>
+              <div style={{ flex: 1, marginLeft: 12, minWidth: 0 }}>
+                <div style={{ fontSize: fs(15), fontWeight: 'bold', color: COLORS.darkGray }}>{item.title}</div>
+                <div style={{ fontSize: fs(11), color: COLORS.gray, marginTop: 2, lineHeight: 1.3 }}>{item.desc}</div>
+              </div>
             </div>
-            <div style={{ fontSize: 30, color: COLORS.red, fontWeight: 'bold' }}>›</div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <div style={{ textAlign: 'center', padding: 30, marginTop: 10 }}>
-        <div style={{ fontSize: 14, color: COLORS.gray }}>Merah Putih tetap berkibar!</div>
-        <div style={{ fontSize: 40, marginTop: 10 }}>🎖️</div>
+        <div style={{ fontSize: fs(14), color: COLORS.gray }}>Merah Putih tetap berkibar!</div>
+        <div style={{ fontSize: fs(40), marginTop: 10 }}>🎖️</div>
       </div>
     </div>
   );
@@ -499,22 +504,22 @@ function LombaScreen() {
     }
   };
 
-  const inputSt = { width: '100%', border: `1px solid ${COLORS.lightGray}`, borderRadius: 12, padding: 12, fontSize: 14, marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray, outline: 'none' };
+  const inputSt = { width: '100%', border: `1px solid ${COLORS.lightGray}`, borderRadius: 12, padding: 12, fontSize: fs(14), marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray, outline: 'none' };
 
   return (
     <div style={{ paddingBottom: 20 }}>
       <div style={{ ...s.header, paddingBottom: 20 }}>
-        <div style={{ fontSize: 40, marginBottom: 5 }}>📋</div>
+        <div style={{ fontSize: fs(40), marginBottom: 5 }}>📋</div>
         <div style={s.headerTitle}>Running Order</div>
-        <div style={{ fontSize: 14, color: COLORS.gold, marginTop: 4 }}>17 Agustus 2026</div>
+        <div style={{ fontSize: fs(14), color: COLORS.gold, marginTop: 4 }}>17 Agustus 2026</div>
       </div>
 
       <div style={{ padding: '12px 16px 5px' }}>
-        <div style={{ fontSize: 13, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Filter Kategori:</div>
+        <div style={{ fontSize: fs(13), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Filter Kategori:</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {['Semua', ...semuaKategori].map(k => (
             <button key={k} onClick={() => setFilterKategori(k)} style={{
-              display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: 11,
+              display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: fs(11),
               background: filterKategori === k ? COLORS.red : COLORS.white,
               color: filterKategori === k ? COLORS.white : COLORS.darkGray,
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
@@ -524,25 +529,25 @@ function LombaScreen() {
       </div>
 
       <div style={{ padding: '0 16px' }}>
-        <div style={{ textAlign: 'center', padding: '12px 0 4px', fontSize: 24, fontWeight: 'bold', color: COLORS.red, fontVariantNumeric: 'tabular-nums' }}>
+        <div style={{ textAlign: 'center', padding: '12px 0 4px', fontSize: fs(24), fontWeight: 'bold', color: COLORS.red, fontVariantNumeric: 'tabular-nums' }}>
           {now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
         </div>
-        <div style={{ textAlign: 'center', fontSize: 11, color: COLORS.gray, marginBottom: 8 }}>WIB • {now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
+        <div style={{ textAlign: 'center', fontSize: fs(11), color: COLORS.gray, marginBottom: 8 }}>WIB • {now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
 
         {currentIdx !== -1 && (
           <div style={{ background: getTimeLeft(jadwal[currentIdx]) < 0 ? 'linear-gradient(135deg, #FFEBEE, #FFCDD2)' : 'linear-gradient(135deg, #E8F5E9, #C8E6C9)', borderRadius: 12, padding: 14, marginBottom: 12, border: `2px solid ${getTimeLeft(jadwal[currentIdx]) < 0 ? '#DC3545' : COLORS.green}`, textAlign: 'center' }}>
-            <div style={{ fontSize: 11, fontWeight: 'bold', color: getTimeLeft(jadwal[currentIdx]) < 0 ? '#DC3545' : COLORS.green, marginBottom: 4 }}>{getTimeLeft(jadwal[currentIdx]) < 0 ? '⚠️ LEBUR WAKTU' : '🔴 SISA WAKTU'}</div>
-            <div style={{ fontSize: 36, fontWeight: 'bold', color: getTimeLeft(jadwal[currentIdx]) < 0 ? '#DC3545' : COLORS.darkGray, fontVariantNumeric: 'tabular-nums' }}>{fmtCountdown(getTimeLeft(jadwal[currentIdx]))}</div>
-            <div style={{ fontSize: 12, color: COLORS.gray }}>{jadwal[currentIdx].icon} {jadwal[currentIdx].nama} • {jadwal[currentIdx].kategori}</div>
+            <div style={{ fontSize: fs(11), fontWeight: 'bold', color: getTimeLeft(jadwal[currentIdx]) < 0 ? '#DC3545' : COLORS.green, marginBottom: 4 }}>{getTimeLeft(jadwal[currentIdx]) < 0 ? '⚠️ LEBUR WAKTU' : '🔴 SISA WAKTU'}</div>
+            <div style={{ fontSize: fs(36), fontWeight: 'bold', color: getTimeLeft(jadwal[currentIdx]) < 0 ? '#DC3545' : COLORS.darkGray, fontVariantNumeric: 'tabular-nums' }}>{fmtCountdown(getTimeLeft(jadwal[currentIdx]))}</div>
+            <div style={{ fontSize: fs(12), color: COLORS.gray }}>{jadwal[currentIdx].icon} {jadwal[currentIdx].nama} • {jadwal[currentIdx].kategori}</div>
           </div>
         )}
 
         {stopwatch.running && (
           <div style={{ background: 'linear-gradient(135deg, #FFF3E0, #FFE0B2)', borderRadius: 12, padding: 14, marginBottom: 12, border: `2px solid ${COLORS.orange}`, textAlign: 'center' }}>
-            <div style={{ fontSize: 11, fontWeight: 'bold', color: COLORS.orange, marginBottom: 4 }}>⏱️ STOPWATCH {jadwal.find(j => j.id === stopwatch.lombaId)?.nama || ''}</div>
-            <div style={{ fontSize: 36, fontWeight: 'bold', color: COLORS.darkGray, fontVariantNumeric: 'tabular-nums' }}>{fmtSw(stopwatch.elapsed)}</div>
-            <button onClick={stopStopwatch} style={{ marginTop: 8, padding: '8px 20px', borderRadius: 10, background: COLORS.orange, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: 12 }}>BERHENTI</button>
-            <button onClick={resetStopwatch} style={{ marginTop: 8, marginLeft: 8, padding: '8px 20px', borderRadius: 10, background: COLORS.gray, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: 12 }}>RESET</button>
+            <div style={{ fontSize: fs(11), fontWeight: 'bold', color: COLORS.orange, marginBottom: 4 }}>⏱️ STOPWATCH {jadwal.find(j => j.id === stopwatch.lombaId)?.nama || ''}</div>
+            <div style={{ fontSize: fs(36), fontWeight: 'bold', color: COLORS.darkGray, fontVariantNumeric: 'tabular-nums' }}>{fmtSw(stopwatch.elapsed)}</div>
+            <button onClick={stopStopwatch} style={{ marginTop: 8, padding: '8px 20px', borderRadius: 10, background: COLORS.orange, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: fs(12) }}>BERHENTI</button>
+            <button onClick={resetStopwatch} style={{ marginTop: 8, marginLeft: 8, padding: '8px 20px', borderRadius: 10, background: COLORS.gray, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: fs(12) }}>RESET</button>
           </div>
         )}
         {filtered.map((item, idx) => {
@@ -557,20 +562,20 @@ function LombaScreen() {
             <div style={{ flex: 1, background: isCurrent ? '#E8F5E9' : status === 'selesai' ? '#F5F5F5' : tipeBg(item.tipe), borderRadius: 12, padding: '12px 14px', marginBottom: 8, border: isCurrent ? `2px solid ${COLORS.green}` : 'none', transition: 'all 0.3s' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 22 }}>{item.icon}</span>
+                  <span style={{ fontSize: fs(22) }}>{item.icon}</span>
                   <div>
-                    <div style={{ fontSize: 11, fontWeight: 'bold', color: tipeColor(item.tipe), letterSpacing: 0.5 }}>{item.waktu}</div>
-                    <div style={{ fontSize: 14, fontWeight: 'bold', color: status === 'selesai' ? COLORS.gray : COLORS.darkGray }}>{item.nama}</div>
-                    <div style={{ fontSize: 10, color: statusColor(status), fontWeight: 'bold', marginTop: 2 }}>{statusLabel(status)}</div>
+                    <div style={{ fontSize: fs(11), fontWeight: 'bold', color: tipeColor(item.tipe), letterSpacing: 0.5 }}>{item.waktu}</div>
+                    <div style={{ fontSize: fs(14), fontWeight: 'bold', color: status === 'selesai' ? COLORS.gray : COLORS.darkGray }}>{item.nama}</div>
+                    <div style={{ fontSize: fs(10), color: statusColor(status), fontWeight: 'bold', marginTop: 2 }}>{statusLabel(status)}</div>
                   </div>
                 </div>
-                <span style={{ ...s.badge(tipeColor(item.tipe)), fontSize: 10, padding: '2px 8px' }}>{item.kategori}</span>
+                <span style={{ ...s.badge(tipeColor(item.tipe)), fontSize: fs(10), padding: '2px 8px' }}>{item.kategori}</span>
               </div>
               {isCurrent && item.tipe === 'lomba' && !stopwatch.running && (
-                <button onClick={(e) => { e.stopPropagation(); startStopwatch(item.id); }} style={{ marginTop: 8, padding: '6px 14px', borderRadius: 8, background: COLORS.orange, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: 11 }}>⏱️ Mulai Stopwatch</button>
+                <button onClick={(e) => { e.stopPropagation(); startStopwatch(item.id); }} style={{ marginTop: 8, padding: '6px 14px', borderRadius: 8, background: COLORS.orange, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: fs(11) }}>⏱️ Mulai Stopwatch</button>
               )}
               {isCurrent && getTimeLeft(item) !== null && (
-                <div style={{ marginTop: 6, fontSize: 12, fontWeight: 'bold', color: getTimeLeft(item) < 0 ? '#DC3545' : statusColor('sedang_berlangsung'), fontVariantNumeric: 'tabular-nums' }}>
+                <div style={{ marginTop: 6, fontSize: fs(12), fontWeight: 'bold', color: getTimeLeft(item) < 0 ? '#DC3545' : statusColor('sedang_berlangsung'), fontVariantNumeric: 'tabular-nums' }}>
                   {getTimeLeft(item) < 0 ? '⚠️ Lebih ' : 'Sisa: '}{fmtCountdown(getTimeLeft(item))}
                 </div>
               )}
@@ -580,24 +585,24 @@ function LombaScreen() {
         })}
       </div>
 
-      <button onClick={() => { setForm({ nama: '', waktu: '', kategori: 'Umum', icon: '🏃', tipe: 'lomba' }); setEditItem(null); setShowEdit(true); }} style={{ position: 'fixed', right: 20, bottom: 80, width: 60, height: 60, borderRadius: 30, background: COLORS.red, color: COLORS.white, fontSize: 30, fontWeight: 'bold', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.3)', zIndex: 100 }}>+</button>
+      <button onClick={() => { setForm({ nama: '', waktu: '', kategori: 'Umum', icon: '🏃', tipe: 'lomba' }); setEditItem(null); setShowEdit(true); }} style={{ position: 'fixed', right: 24, bottom: 24, width: 60, height: 60, borderRadius: 30, background: COLORS.red, color: COLORS.white, fontSize: fs(30), fontWeight: 'bold', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.3)', zIndex: 100 }}>+</button>
 
       {selected && (
         <div onClick={() => setSelected(null)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: COLORS.white, borderRadius: 16, padding: 25, width: '85%', maxWidth: 400, textAlign: 'center' }}>
-            <div style={{ fontSize: 50, marginBottom: 10 }}>{selected.icon}</div>
-            <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 20, background: tipeColor(selected.tipe), color: COLORS.white, fontSize: 11, fontWeight: 'bold', marginBottom: 10 }}>{selected.tipe.toUpperCase()}</div>
-            <div style={{ fontSize: 22, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 5 }}>{selected.nama}</div>
-            <div style={{ fontSize: 16, color: tipeColor(selected.tipe), fontWeight: 'bold', marginBottom: 5 }}>{selected.waktu}</div>
-            <div style={{ fontSize: 13, color: statusColor(getStatus(selected)), fontWeight: 'bold', marginBottom: 15 }}>{statusLabel(getStatus(selected))}</div>
+            <div style={{ fontSize: fs(50), marginBottom: 10 }}>{selected.icon}</div>
+            <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 20, background: tipeColor(selected.tipe), color: COLORS.white, fontSize: fs(11), fontWeight: 'bold', marginBottom: 10 }}>{selected.tipe.toUpperCase()}</div>
+            <div style={{ fontSize: fs(22), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 5 }}>{selected.nama}</div>
+            <div style={{ fontSize: fs(16), color: tipeColor(selected.tipe), fontWeight: 'bold', marginBottom: 5 }}>{selected.waktu}</div>
+            <div style={{ fontSize: fs(13), color: statusColor(getStatus(selected)), fontWeight: 'bold', marginBottom: 15 }}>{statusLabel(getStatus(selected))}</div>
             <div style={{ background: tipeBg(selected.tipe), borderRadius: 12, padding: 15, marginBottom: 20, textAlign: 'left' }}>
-              <div style={{ marginBottom: 8, fontSize: 14, color: COLORS.darkGray }}>📌 Kategori: <strong>{selected.kategori}</strong></div>
-              {selected.durasi && <div style={{ fontSize: 14, color: COLORS.darkGray }}>⏱️ Durasi: <strong>{selected.durasi} menit</strong></div>}
+              <div style={{ marginBottom: 8, fontSize: fs(14), color: COLORS.darkGray }}>📌 Kategori: <strong>{selected.kategori}</strong></div>
+              {selected.durasi && <div style={{ fontSize: fs(14), color: COLORS.darkGray }}>⏱️ Durasi: <strong>{selected.durasi} menit</strong></div>}
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <button onClick={() => { setSelected(null); openEdit(selected); }} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.blue, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: 13 }}>Edit</button>
-              <button onClick={() => handleDeleteItem(selected.id)} style={{ flex: 1, padding: 12, borderRadius: 12, background: '#DC3545', color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: 13 }}>Hapus</button>
-              <button onClick={() => setSelected(null)} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.gray, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: 13 }}>Tutup</button>
+              <button onClick={() => { setSelected(null); openEdit(selected); }} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.blue, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: fs(13) }}>Edit</button>
+              <button onClick={() => handleDeleteItem(selected.id)} style={{ flex: 1, padding: 12, borderRadius: 12, background: '#DC3545', color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: fs(13) }}>Hapus</button>
+              <button onClick={() => setSelected(null)} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.gray, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: fs(13) }}>Tutup</button>
             </div>
           </div>
         </div>
@@ -606,29 +611,29 @@ function LombaScreen() {
       {showEdit && (
         <div onClick={() => setShowEdit(false)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: COLORS.white, borderRadius: 16, padding: 25, width: '85%', maxWidth: 400, maxHeight: '85vh', overflowY: 'auto' }}>
-            <div style={{ fontSize: 22, fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>{editItem ? 'Edit Jadwal' : 'Tambah Jadwal Baru'}</div>
+            <div style={{ fontSize: fs(22), fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>{editItem ? 'Edit Jadwal' : 'Tambah Jadwal Baru'}</div>
 
-            <div style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Icon:</div>
+            <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Icon:</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
               {EMOJI_OPTIONS.map(em => (
-                <div key={em} onClick={() => setForm({...form, icon: em})} style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, fontSize: 20, cursor: 'pointer', border: form.icon === em ? `2px solid ${COLORS.red}` : '2px solid transparent', background: form.icon === em ? '#FFE5E5' : COLORS.lightGray }}>{em}</div>
+                <div key={em} onClick={() => setForm({...form, icon: em})} style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, fontSize: fs(20), cursor: 'pointer', border: form.icon === em ? `2px solid ${COLORS.red}` : '2px solid transparent', background: form.icon === em ? '#FFE5E5' : COLORS.lightGray }}>{em}</div>
               ))}
             </div>
 
             <input value={form.nama || ''} onChange={e => setForm({...form, nama: e.target.value})} placeholder="Nama Kegiatan" style={inputSt} />
             <input value={form.waktu || ''} onChange={e => setForm({...form, waktu: e.target.value})} placeholder="Waktu (contoh: 08.00 - 08.20)" style={inputSt} />
 
-            <div style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Tipe:</div>
+            <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Tipe:</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
               {[{n:'upacara',l:'Upacara'},{n:'lomba',l:'Lomba'},{n:'persiapan',l:'Persiapan'},{n:'istirahat',l:'Istirahat'},{n:'foto',l:'Foto'},{n:'penutup',l:'Penutup'}].map(t => (
-                <button key={t.n} onClick={() => setForm({...form, tipe: t.n})} style={{ padding: '6px 12px', borderRadius: 20, border: form.tipe === t.n ? `2px solid ${tipeColor(t.n)}` : '2px solid transparent', cursor: 'pointer', fontSize: 12, background: form.tipe === t.n ? tipeBg(t.n) : COLORS.lightGray, color: COLORS.darkGray, fontWeight: form.tipe === t.n ? 'bold' : 'normal' }}>{t.l}</button>
+                <button key={t.n} onClick={() => setForm({...form, tipe: t.n})} style={{ padding: '6px 12px', borderRadius: 20, border: form.tipe === t.n ? `2px solid ${tipeColor(t.n)}` : '2px solid transparent', cursor: 'pointer', fontSize: fs(12), background: form.tipe === t.n ? tipeBg(t.n) : COLORS.lightGray, color: COLORS.darkGray, fontWeight: form.tipe === t.n ? 'bold' : 'normal' }}>{t.l}</button>
               ))}
             </div>
 
-            <div style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Kategori Peserta:</div>
+            <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Kategori Peserta:</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 20 }}>
               {semuaKategori.map(k => (
-                <button key={k} onClick={() => setForm({...form, kategori: k})} style={{ padding: '6px 12px', borderRadius: 20, border: form.kategori === k ? `2px solid ${COLORS.red}` : '2px solid transparent', cursor: 'pointer', fontSize: 12, background: form.kategori === k ? '#FFE5E5' : COLORS.lightGray, color: COLORS.darkGray }}>{k}</button>
+                <button key={k} onClick={() => setForm({...form, kategori: k})} style={{ padding: '6px 12px', borderRadius: 20, border: form.kategori === k ? `2px solid ${COLORS.red}` : '2px solid transparent', cursor: 'pointer', fontSize: fs(12), background: form.kategori === k ? '#FFE5E5' : COLORS.lightGray, color: COLORS.darkGray }}>{k}</button>
               ))}
             </div>
 
@@ -652,6 +657,8 @@ function PesertaScreen() {
   const [selected, setSelected] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
   const [newP, setNewP] = useState({ nama: '', jk: 'L', grup: 'Pra-paud' });
+  const [showEditP, setShowEditP] = useState(false);
+  const [editP, setEditP] = useState({ id: '', nama: '', jk: 'L', grup: 'Pra-paud' });
 
   const filtered = pesertaList.filter(p => {
     const matchSearch = p.nama.toLowerCase().includes(search.toLowerCase());
@@ -676,26 +683,48 @@ function PesertaScreen() {
     }
   };
 
-  const inputSt = { width: '100%', border: `1px solid ${COLORS.lightGray}`, borderRadius: 12, padding: 12, fontSize: 14, marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray, outline: 'none' };
+  const openEdit = (p) => {
+    setEditP({ id: p.id, nama: p.nama, jk: p.jk, grup: p.grup });
+    setShowEditP(true);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editP.nama) { alert('Nama tidak boleh kosong'); return; }
+    setPesertaList(prev => prev.map(p => p.id === editP.id ? { ...p, nama: editP.nama, jk: editP.jk, grup: editP.grup } : p));
+    setShowEditP(false);
+    setSelected(null);
+    alert('Peserta berhasil diperbarui!');
+  };
+
+  const handleDelete = (id) => {
+    if (confirm('Yakin hapus peserta ini?')) {
+      setPesertaList(prev => prev.filter(p => p.id !== id));
+      setShowEditP(false);
+      setSelected(null);
+      alert('Peserta dihapus');
+    }
+  };
+
+  const inputSt = { width: '100%', border: `1px solid ${COLORS.lightGray}`, borderRadius: 12, padding: 12, fontSize: fs(14), marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray, outline: 'none' };
 
   return (
     <div style={{ paddingBottom: 80 }}>
       <div style={{ ...s.header, paddingBottom: 20 }}>
         <div style={s.headerTitle}>Peserta Lomba</div>
-        <div style={{ fontSize: 14, color: COLORS.gold, marginTop: 4 }}>{PESERTA_LIST.length} Peserta Terdaftar</div>
+        <div style={{ fontSize: fs(14), color: COLORS.gold, marginTop: 4 }}>{PESERTA_LIST.length} Peserta Terdaftar</div>
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', background: COLORS.white, borderRadius: 12, margin: 16, padding: '0 15px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-        <span style={{ fontSize: 18, marginRight: 10 }}>🔍</span>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari peserta..." style={{ flex: 1, border: 'none', padding: '14px 0', fontSize: 14, outline: 'none', background: 'transparent', color: COLORS.darkGray }} />
+        <span style={{ fontSize: fs(18), marginRight: 10 }}>🔍</span>
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari peserta..." style={{ flex: 1, border: 'none', padding: '14px 0', fontSize: fs(14), outline: 'none', background: 'transparent', color: COLORS.darkGray }} />
       </div>
 
       <div style={{ padding: '0 16px 10px' }}>
-        <div style={{ fontSize: 13, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Jenis Kelamin:</div>
+        <div style={{ fontSize: fs(13), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Jenis Kelamin:</div>
         <div style={{ display: 'flex', gap: 6 }}>
           {[{ key: 'Semua', label: 'Semua', icon: '👥' }, { key: 'L', label: 'Laki-laki', icon: '👦' }, { key: 'P', label: 'Perempuan', icon: '👧' }].map(g => (
             <button key={g.key} onClick={() => setFilterJk(g.key)} style={{
-              display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: 12,
+              display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: fs(12),
               background: filterJk === g.key ? COLORS.blue : COLORS.white,
               color: filterJk === g.key ? COLORS.white : COLORS.darkGray,
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
@@ -707,11 +736,11 @@ function PesertaScreen() {
       </div>
 
       <div style={{ padding: '0 16px 5px' }}>
-        <div style={{ fontSize: 13, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Grup Usia:</div>
+        <div style={{ fontSize: fs(13), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Grup Usia:</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {['Semua', ...GRUP_KATEGORI.map(g => g.nama)].map(g => (
             <button key={g} onClick={() => setFilterGrup(g)} style={{
-              display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: 12,
+              display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: fs(12),
               background: filterGrup === g ? COLORS.red : COLORS.white,
               color: filterGrup === g ? COLORS.white : COLORS.darkGray,
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
@@ -724,11 +753,11 @@ function PesertaScreen() {
       </div>
 
       <div style={{ padding: '8px 16px 10px' }}>
-        <div style={{ fontSize: 13, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Kategori:</div>
+        <div style={{ fontSize: fs(13), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Kategori:</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {['Semua', ...KATEGORI_PESERTA.map(k => k.nama)].map(k => (
             <button key={k} onClick={() => setFilterKategori(k)} style={{
-              display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: 12,
+              display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: fs(12),
               background: filterKategori === k ? COLORS.blue : COLORS.white,
               color: filterKategori === k ? COLORS.white : COLORS.darkGray,
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
@@ -741,36 +770,40 @@ function PesertaScreen() {
       </div>
 
       <div style={{ padding: '0 16px' }}>
-        <div style={{ fontSize: 12, color: COLORS.gray, marginBottom: 8 }}>Menampilkan {filtered.length} peserta</div>
+        <div style={{ fontSize: fs(12), color: COLORS.gray, marginBottom: 8 }}>Menampilkan {filtered.length} peserta</div>
         {filtered.map(p => (
           <div key={p.id} onClick={() => setSelected(p)} style={{ display: 'flex', alignItems: 'center', background: COLORS.white, borderRadius: 12, padding: 14, marginBottom: 10, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
-            <div style={{ width: 45, height: 45, borderRadius: 25, background: grupColor(p.grup), display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 12, fontSize: 20, fontWeight: 'bold', color: COLORS.white }}>{p.nama.charAt(0)}</div>
+            <div style={{ width: 45, height: 45, borderRadius: 25, background: grupColor(p.grup), display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 12, fontSize: fs(20), fontWeight: 'bold', color: COLORS.white }}>{p.nama.charAt(0)}</div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray }}>{p.nama}</div>
-              <div style={{ fontSize: 11, color: COLORS.gray, marginTop: 3 }}>{p.grup} • {p.jk === 'L' ? '👦 Laki-laki' : '👧 Perempuan'}</div>
+              <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray }}>{p.nama}</div>
+              <div style={{ fontSize: fs(11), color: COLORS.gray, marginTop: 3 }}>{p.grup} • {p.jk === 'L' ? '👦 Laki-laki' : '👧 Perempuan'}</div>
             </div>
             <div style={{ display: 'flex', gap: 4 }}>
-              <span style={{ ...s.badge(p.jk === 'L' ? '#4A90D9' : '#E91E63'), padding: '2px 8px', fontSize: 11 }}>{p.jk === 'L' ? '👦' : '👧'}</span>
+              <span style={{ ...s.badge(p.jk === 'L' ? '#4A90D9' : '#E91E63'), padding: '2px 8px', fontSize: fs(11) }}>{p.jk === 'L' ? '👦' : '👧'}</span>
               <span style={s.badge(grupColor(p.grup))}>{p.grup}</span>
             </div>
+            <button onClick={(e) => { e.stopPropagation(); openEdit(p); }} style={{ marginLeft: 10, width: 34, height: 34, borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: fs(15), background: '#E3F2FD', color: '#4A90D9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✏️</button>
           </div>
         ))}
       </div>
 
-      <button onClick={() => setShowAdd(true)} style={{ position: 'fixed', right: 20, bottom: 80, width: 60, height: 60, borderRadius: 30, background: COLORS.red, color: COLORS.white, fontSize: 30, fontWeight: 'bold', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.3)', zIndex: 100 }}>+</button>
+      <button onClick={() => setShowAdd(true)} style={{ position: 'fixed', right: 24, bottom: 24, width: 60, height: 60, borderRadius: 30, background: COLORS.red, color: COLORS.white, fontSize: fs(30), fontWeight: 'bold', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.3)', zIndex: 100 }}>+</button>
 
       {selected && (
         <div onClick={() => setSelected(null)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: COLORS.white, borderRadius: 16, padding: 25, width: '85%', maxWidth: 400, textAlign: 'center' }}>
-            <div style={{ width: 70, height: 70, borderRadius: 35, background: grupColor(selected.grup), display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 15px', fontSize: 32, fontWeight: 'bold', color: COLORS.white }}>{selected.nama.charAt(0)}</div>
-            <div style={{ fontSize: 22, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 5 }}>{selected.nama}</div>
+            <div style={{ width: 70, height: 70, borderRadius: 35, background: grupColor(selected.grup), display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 15px', fontSize: fs(32), fontWeight: 'bold', color: COLORS.white }}>{selected.nama.charAt(0)}</div>
+            <div style={{ fontSize: fs(22), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 5 }}>{selected.nama}</div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 15 }}>
               <span style={s.badge(grupColor(selected.grup))}>{selected.grup}</span>
             </div>
             <div style={{ background: COLORS.lightGray, borderRadius: 12, padding: 15, marginBottom: 20, textAlign: 'left' }}>
-              <div style={{ fontSize: 14, color: COLORS.darkGray }}>👥 Grup: <strong>{selected.grup}</strong></div>
+              <div style={{ fontSize: fs(14), color: COLORS.darkGray }}>👥 Grup: <strong>{selected.grup}</strong></div>
             </div>
-            <button onClick={() => setSelected(null)} style={{ background: COLORS.red, color: COLORS.white, padding: '12px 30px', borderRadius: 12, border: 'none', fontWeight: 'bold', fontSize: 14, cursor: 'pointer' }}>Tutup</button>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button onClick={() => { openEdit(selected); }} style={{ flex: 1, background: '#4A90D9', color: COLORS.white, padding: '12px 20px', borderRadius: 12, border: 'none', fontWeight: 'bold', fontSize: fs(14), cursor: 'pointer' }}>✏️ Edit</button>
+              <button onClick={() => setSelected(null)} style={{ flex: 1, background: COLORS.red, color: COLORS.white, padding: '12px 20px', borderRadius: 12, border: 'none', fontWeight: 'bold', fontSize: fs(14), cursor: 'pointer' }}>Tutup</button>
+            </div>
           </div>
         </div>
       )}
@@ -778,18 +811,18 @@ function PesertaScreen() {
       {showAdd && (
         <div onClick={() => setShowAdd(false)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: COLORS.white, borderRadius: 16, padding: 25, width: '85%', maxWidth: 400 }}>
-            <div style={{ fontSize: 22, fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>Tambah Peserta Baru</div>
-            <input value={newP.nama} onChange={e => setNewP({...newP, nama: e.target.value})} placeholder="Nama Peserta" style={{ width: '100%', border: `1px solid ${COLORS.lightGray}`, borderRadius: 12, padding: 12, fontSize: 14, marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray }} />
-            <div style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Jenis Kelamin:</div>
+            <div style={{ fontSize: fs(22), fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>Tambah Peserta Baru</div>
+            <input value={newP.nama} onChange={e => setNewP({...newP, nama: e.target.value})} placeholder="Nama Peserta" style={{ width: '100%', border: `1px solid ${COLORS.lightGray}`, borderRadius: 12, padding: 12, fontSize: fs(14), marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray }} />
+            <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Jenis Kelamin:</div>
             <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
               {[{ key: 'L', label: '👦 Laki-laki' }, { key: 'P', label: '👧 Perempuan' }].map(g => (
-                <button key={g.key} onClick={() => setNewP({...newP, jk: g.key})} style={{ flex: 1, padding: '10px', borderRadius: 12, border: newP.jk === g.key ? `2px solid ${COLORS.blue}` : '2px solid transparent', cursor: 'pointer', fontSize: 13, background: newP.jk === g.key ? '#E3F2FD' : COLORS.lightGray, fontWeight: newP.jk === g.key ? 'bold' : 'normal', color: COLORS.darkGray }}>{g.label}</button>
+                <button key={g.key} onClick={() => setNewP({...newP, jk: g.key})} style={{ flex: 1, padding: '10px', borderRadius: 12, border: newP.jk === g.key ? `2px solid ${COLORS.blue}` : '2px solid transparent', cursor: 'pointer', fontSize: fs(13), background: newP.jk === g.key ? '#E3F2FD' : COLORS.lightGray, fontWeight: newP.jk === g.key ? 'bold' : 'normal', color: COLORS.darkGray }}>{g.label}</button>
               ))}
             </div>
-            <div style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Pilih Grup:</div>
+            <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Pilih Grup:</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
               {GRUP_KATEGORI.map(k => (
-                <button key={k.id} onClick={() => setNewP({...newP, grup: k.nama})} style={{ display: 'flex', alignItems: 'center', padding: '8px 12px', borderRadius: 20, border: newP.grup === k.nama ? `2px solid ${COLORS.red}` : '2px solid transparent', cursor: 'pointer', fontSize: 12, background: newP.grup === k.nama ? '#FFE5E5' : COLORS.lightGray, color: newP.grup === k.nama ? COLORS.red : COLORS.darkGray }}>
+                <button key={k.id} onClick={() => setNewP({...newP, grup: k.nama})} style={{ display: 'flex', alignItems: 'center', padding: '8px 12px', borderRadius: 20, border: newP.grup === k.nama ? `2px solid ${COLORS.red}` : '2px solid transparent', cursor: 'pointer', fontSize: fs(12), background: newP.grup === k.nama ? '#FFE5E5' : COLORS.lightGray, color: newP.grup === k.nama ? COLORS.red : COLORS.darkGray }}>
                   <span style={{ marginRight: 6 }}>{k.icon}</span>{k.nama}
                 </button>
               ))}
@@ -797,6 +830,34 @@ function PesertaScreen() {
             <div style={{ display: 'flex', gap: 12 }}>
               <button onClick={() => setShowAdd(false)} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.lightGray, color: COLORS.darkGray, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>Batal</button>
               <button onClick={handleSave} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.red, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>Simpan</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showEditP && (
+        <div onClick={() => setShowEditP(false)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: COLORS.white, borderRadius: 16, padding: 25, width: '85%', maxWidth: 400 }}>
+            <div style={{ fontSize: fs(22), fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>Edit Peserta</div>
+            <input value={editP.nama} onChange={e => setEditP({...editP, nama: e.target.value})} placeholder="Nama Peserta" style={{ width: '100%', border: `1px solid ${COLORS.lightGray}`, borderRadius: 12, padding: 12, fontSize: fs(14), marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray }} />
+            <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Jenis Kelamin:</div>
+            <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+              {[{ key: 'L', label: '👦 Laki-laki' }, { key: 'P', label: '👧 Perempuan' }].map(g => (
+                <button key={g.key} onClick={() => setEditP({...editP, jk: g.key})} style={{ flex: 1, padding: '10px', borderRadius: 12, border: editP.jk === g.key ? `2px solid ${COLORS.blue}` : '2px solid transparent', cursor: 'pointer', fontSize: fs(13), background: editP.jk === g.key ? '#E3F2FD' : COLORS.lightGray, fontWeight: editP.jk === g.key ? 'bold' : 'normal', color: COLORS.darkGray }}>{g.label}</button>
+              ))}
+            </div>
+            <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Pilih Grup:</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
+              {GRUP_KATEGORI.map(k => (
+                <button key={k.id} onClick={() => setEditP({...editP, grup: k.nama})} style={{ display: 'flex', alignItems: 'center', padding: '8px 12px', borderRadius: 20, border: editP.grup === k.nama ? `2px solid ${COLORS.red}` : '2px solid transparent', cursor: 'pointer', fontSize: fs(12), background: editP.grup === k.nama ? '#FFE5E5' : COLORS.lightGray, color: editP.grup === k.nama ? COLORS.red : COLORS.darkGray }}>
+                  <span style={{ marginRight: 6 }}>{k.icon}</span>{k.nama}
+                </button>
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button onClick={() => handleDelete(editP.id)} style={{ flex: 1, padding: 12, borderRadius: 12, background: '#FFE5E5', color: COLORS.red, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>🗑️ Hapus</button>
+              <button onClick={() => setShowEditP(false)} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.lightGray, color: COLORS.darkGray, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>Batal</button>
+              <button onClick={handleSaveEdit} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.green, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>Simpan</button>
             </div>
           </div>
         </div>
@@ -845,10 +906,10 @@ function PenilaianScreen({ scores, setScores }) {
     return (
       <div style={{ paddingBottom: 20 }}>
         <div style={{ ...s.header, paddingBottom: 20 }}>
-          <div onClick={() => { setSelectedLomba(null); setScoreInputs({}); }} style={{ position: 'absolute', left: 16, top: 50, fontSize: 28, color: COLORS.white, cursor: 'pointer' }}>←</div>
-          <div style={{ fontSize: 40, marginBottom: 5 }}>{selectedLomba.icon}</div>
+          <div onClick={() => { setSelectedLomba(null); setScoreInputs({}); }} style={{ position: 'absolute', left: 16, top: 50, fontSize: fs(28), color: COLORS.white, cursor: 'pointer' }}>←</div>
+          <div style={{ fontSize: fs(40), marginBottom: 5 }}>{selectedLomba.icon}</div>
           <div style={s.headerTitle}>Penilaian</div>
-          <div style={{ fontSize: 14, color: COLORS.gold, marginTop: 4 }}>{selectedLomba.nama} • {selectedLomba.kategori}</div>
+          <div style={{ fontSize: fs(14), color: COLORS.gold, marginTop: 4 }}>{selectedLomba.nama} • {selectedLomba.kategori}</div>
         </div>
 
         <div style={{ padding: 16 }}>
@@ -861,13 +922,13 @@ function PenilaianScreen({ scores, setScores }) {
                 if (group.length === 0) return null;
                 return (
                   <div key={jk}>
-                    <div style={{ fontSize: 15, fontWeight: 'bold', color: jk === 'L' ? '#4A90D9' : '#E91E63', marginBottom: 8, marginTop: 12, padding: '4px 8px', background: jk === 'L' ? '#E3F2FD' : '#FCE4EC', borderRadius: 8 }}>{label} ({group.length})</div>
+                    <div style={{ fontSize: fs(15), fontWeight: 'bold', color: jk === 'L' ? '#4A90D9' : '#E91E63', marginBottom: 8, marginTop: 12, padding: '4px 8px', background: jk === 'L' ? '#E3F2FD' : '#FCE4EC', borderRadius: 8 }}>{label} ({group.length})</div>
                     {group.map((p, i) => (
                       <div key={p.id} style={{ display: 'flex', alignItems: 'center', background: COLORS.white, borderRadius: 12, padding: 14, marginBottom: 10, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 18, background: jk === 'L' ? '#4A90D9' : '#E91E63', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 12, fontSize: 14, fontWeight: 'bold', color: COLORS.white }}>{i + 1}</div>
+                        <div style={{ width: 36, height: 36, borderRadius: 18, background: jk === 'L' ? '#4A90D9' : '#E91E63', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 12, fontSize: fs(14), fontWeight: 'bold', color: COLORS.white }}>{i + 1}</div>
                         <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray }}>{p.nama}</div>
-                          <div style={{ fontSize: 11, color: COLORS.gray }}>{p.grup} • {p.jk === 'L' ? '👦' : '👧'}</div>
+                          <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray }}>{p.nama}</div>
+                          <div style={{ fontSize: fs(11), color: COLORS.gray }}>{p.grup} • {p.jk === 'L' ? '👦' : '👧'}</div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                           <input
@@ -877,9 +938,9 @@ function PenilaianScreen({ scores, setScores }) {
                             placeholder="0-100"
                             value={scoreInputs[p.id] !== undefined ? scoreInputs[p.id] : getScore(selectedLomba.id, p.id)}
                             onChange={(e) => handleScoreChange(p.id, e.target.value)}
-                            style={{ width: 70, padding: '8px 6px', borderRadius: 8, border: `2px solid ${COLORS.lightGray}`, textAlign: 'center', fontSize: 16, fontWeight: 'bold', color: COLORS.darkGray, outline: 'none' }}
+                            style={{ width: 70, padding: '8px 6px', borderRadius: 8, border: `2px solid ${COLORS.lightGray}`, textAlign: 'center', fontSize: fs(16), fontWeight: 'bold', color: COLORS.darkGray, outline: 'none' }}
                           />
-                          <span style={{ fontSize: 12, color: COLORS.gray }}>poin</span>
+                          <span style={{ fontSize: fs(12), color: COLORS.gray }}>poin</span>
                         </div>
                       </div>
                     ))}
@@ -889,7 +950,7 @@ function PenilaianScreen({ scores, setScores }) {
             </>
           )}
           {participants.length > 0 && (
-            <button onClick={handleSaveScores} style={{ width: '100%', padding: 14, borderRadius: 12, background: COLORS.green, color: COLORS.white, fontWeight: 'bold', fontSize: 16, border: 'none', cursor: 'pointer', marginTop: 10 }}>Simpan Penilaian</button>
+            <button onClick={handleSaveScores} style={{ width: '100%', padding: 14, borderRadius: 12, background: COLORS.green, color: COLORS.white, fontWeight: 'bold', fontSize: fs(16), border: 'none', cursor: 'pointer', marginTop: 10 }}>Simpan Penilaian</button>
           )}
         </div>
       </div>
@@ -900,7 +961,7 @@ function PenilaianScreen({ scores, setScores }) {
     <div style={{ paddingBottom: 20 }}>
       <div style={s.header}>
         <div style={s.headerTitle}>Penilaian Lomba</div>
-        <div style={{ fontSize: 14, color: COLORS.gold, marginTop: 4 }}>Pilih lomba untuk memberi penilaian</div>
+        <div style={{ fontSize: fs(14), color: COLORS.gold, marginTop: 4 }}>Pilih lomba untuk memberi penilaian</div>
       </div>
 
       <div style={{ padding: 16 }}>
@@ -910,14 +971,14 @@ function PenilaianScreen({ scores, setScores }) {
           const scored = Object.keys(lScores).length;
           return (
             <div key={l.id} onClick={() => { setSelectedLomba(l); setScoreInputs({}); }} style={{ display: 'flex', alignItems: 'center', background: COLORS.white, borderRadius: 16, padding: 16, marginBottom: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
-              <div style={{ width: 50, height: 50, borderRadius: 25, background: scored > 0 ? COLORS.green : COLORS.orange, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, marginRight: 15 }}>{l.icon}</div>
+              <div style={{ width: 50, height: 50, borderRadius: 25, background: scored > 0 ? COLORS.green : COLORS.orange, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: fs(26), marginRight: 15 }}>{l.icon}</div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.darkGray }}>{l.nama}</div>
-                <div style={{ fontSize: 12, color: COLORS.gray, marginTop: 2 }}>{l.kategori} • {participants.length} peserta • {scored > 0 ? `${scored}/${participants.length} dinilai` : 'Belum dinilai'}</div>
+                <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.darkGray }}>{l.nama}</div>
+                <div style={{ fontSize: fs(12), color: COLORS.gray, marginTop: 2 }}>{l.kategori} • {participants.length} peserta • {scored > 0 ? `${scored}/${participants.length} dinilai` : 'Belum dinilai'}</div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 {scored > 0 && <span style={s.badge(COLORS.green)}>✓</span>}
-                <span style={{ fontSize: 24, color: COLORS.gray }}>›</span>
+                <span style={{ fontSize: fs(24), color: COLORS.gray }}>›</span>
               </div>
             </div>
           );
@@ -981,18 +1042,18 @@ function JuaraScreen({ scores, hadiahMap, lombaHadiah }) {
     return (
       <div style={{ paddingBottom: 20 }}>
         <div style={{ ...s.header, paddingBottom: 20 }}>
-          <div onClick={() => setSelectedLomba(null)} style={{ position: 'absolute', left: 16, top: 50, fontSize: 28, color: COLORS.white, cursor: 'pointer' }}>←</div>
-          <div style={{ fontSize: 40, marginBottom: 5 }}>{selectedLomba.icon}</div>
+          <div onClick={() => setSelectedLomba(null)} style={{ position: 'absolute', left: 16, top: 50, fontSize: fs(28), color: COLORS.white, cursor: 'pointer' }}>←</div>
+          <div style={{ fontSize: fs(40), marginBottom: 5 }}>{selectedLomba.icon}</div>
           <div style={s.headerTitle}>Juara Lomba</div>
-          <div style={{ fontSize: 14, color: COLORS.gold, marginTop: 4 }}>{selectedLomba.nama} • {selectedLomba.kategori}</div>
+          <div style={{ fontSize: fs(14), color: COLORS.gold, marginTop: 4 }}>{selectedLomba.nama} • {selectedLomba.kategori}</div>
         </div>
 
         <div style={{ padding: 16 }}>
           {!hasScores ? (
             <div style={{ textAlign: 'center', padding: 50, color: COLORS.gray }}>
-              <div style={{ fontSize: 50, marginBottom: 15 }}>📋</div>
-              <div style={{ fontSize: 16, marginBottom: 5 }}>Belum ada penilaian</div>
-              <div style={{ fontSize: 13 }}>Silakan beri penilaian di menu Penilaian terlebih dahulu</div>
+              <div style={{ fontSize: fs(50), marginBottom: 15 }}>📋</div>
+              <div style={{ fontSize: fs(16), marginBottom: 5 }}>Belum ada penilaian</div>
+              <div style={{ fontSize: fs(13) }}>Silakan beri penilaian di menu Penilaian terlebih dahulu</div>
             </div>
           ) : (
             [['L', '👦 Laki-laki'], ['P', '👧 Perempuan']].map(([jk, label]) => {
@@ -1001,22 +1062,22 @@ function JuaraScreen({ scores, hadiahMap, lombaHadiah }) {
               const jmlJ = jmlJuara(selectedLomba, jk);
               return (
                 <div key={jk}>
-                  <div style={{ fontSize: 15, fontWeight: 'bold', color: jk === 'L' ? '#4A90D9' : '#E91E63', marginBottom: 8, marginTop: 12, padding: '4px 8px', background: jk === 'L' ? '#E3F2FD' : '#FCE4EC', borderRadius: 8 }}>{label}</div>
+                  <div style={{ fontSize: fs(15), fontWeight: 'bold', color: jk === 'L' ? '#4A90D9' : '#E91E63', marginBottom: 8, marginTop: 12, padding: '4px 8px', background: jk === 'L' ? '#E3F2FD' : '#FCE4EC', borderRadius: 8 }}>{label}</div>
                   {group.map((r, i) => (
                     <div key={r.id} style={{ background: i < jmlJ ? `linear-gradient(135deg, ${medalColor(i)}22, ${medalColor(i)}11)` : COLORS.white, borderRadius: 16, padding: 16, marginBottom: 10, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', border: i < jmlJ ? `2px solid ${medalColor(i)}55` : 'none' }}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div style={{ width: 45, height: 45, borderRadius: 25, background: i < jmlJ ? medalColor(i) : COLORS.gray, display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 15, fontSize: i < jmlJ ? 22 : 16, fontWeight: 'bold', color: COLORS.white }}>{medalEmoji(i)}</div>
                         <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.darkGray }}>{r.nama}</div>
-                          <div style={{ fontSize: 12, color: COLORS.gray, marginTop: 2 }}>{r.grup}</div>
+                          <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.darkGray }}>{r.nama}</div>
+                          <div style={{ fontSize: fs(12), color: COLORS.gray, marginTop: 2 }}>{r.grup}</div>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <div style={{ fontSize: 22, fontWeight: 'bold', color: COLORS.red }}>{r.score}</div>
-                          <div style={{ fontSize: 11, color: COLORS.gray }}>poin</div>
+                          <div style={{ fontSize: fs(22), fontWeight: 'bold', color: COLORS.red }}>{r.score}</div>
+                          <div style={{ fontSize: fs(11), color: COLORS.gray }}>poin</div>
                         </div>
                       </div>
                       {i < jmlJ && getHadiahLomba(hadiahMap, lombaHadiah, selectedLomba, jk)[i].hadiah && (
-                        <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${medalColor(i)}33`, fontSize: 13, color: medalColor(i), fontWeight: 'bold', textAlign: 'center' }}>
+                        <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${medalColor(i)}33`, fontSize: fs(13), color: medalColor(i), fontWeight: 'bold', textAlign: 'center' }}>
                           {getHadiahLomba(hadiahMap, lombaHadiah, selectedLomba, jk)[i].icon} {getHadiahLomba(hadiahMap, lombaHadiah, selectedLomba, jk)[i].hadiah}
                         </div>
                       )}
@@ -1037,32 +1098,32 @@ function JuaraScreen({ scores, hadiahMap, lombaHadiah }) {
   return (
     <div style={{ paddingBottom: 20 }}>
       <div style={{ ...s.header, paddingBottom: 20 }}>
-        <div style={{ fontSize: 50, marginBottom: 5 }}>🏆</div>
+        <div style={{ fontSize: fs(50), marginBottom: 5 }}>🏆</div>
         <div style={s.headerTitle}>Daftar Juara</div>
-        <div style={{ fontSize: 14, color: COLORS.gold, marginTop: 4 }}>Hasil penilaian seluruh lomba</div>
+        <div style={{ fontSize: fs(14), color: COLORS.gold, marginTop: 4 }}>Hasil penilaian seluruh lomba</div>
       </div>
 
       {hasAnyScores && (
         <div style={{ padding: '16px 16px 0' }}>
-          <div style={{ fontSize: 18, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 12 }}>🏅 Juara Umum (Rata-rata Poin)</div>
+          <div style={{ fontSize: fs(18), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 12 }}>🏅 Juara Umum (Rata-rata Poin)</div>
           {overall.length > 0 ? (
             [['L', '👦 Laki-laki'], ['P', '👧 Perempuan']].map(([jk, label]) => {
               const group = overall.filter(r => r.jk === jk).slice(0, 3);
               if (group.length === 0) return null;
               return (
                 <div key={jk} style={{ marginBottom: 16 }}>
-                  <div style={{ fontSize: 14, fontWeight: 'bold', color: jk === 'L' ? '#4A90D9' : '#E91E63', marginBottom: 8, padding: '4px 8px', background: jk === 'L' ? '#E3F2FD' : '#FCE4EC', borderRadius: 8 }}>{label}</div>
+                  <div style={{ fontSize: fs(14), fontWeight: 'bold', color: jk === 'L' ? '#4A90D9' : '#E91E63', marginBottom: 8, padding: '4px 8px', background: jk === 'L' ? '#E3F2FD' : '#FCE4EC', borderRadius: 8 }}>{label}</div>
                   {group.map((r, i) => (
                     <div key={r.id} style={{ background: i < 3 ? `linear-gradient(135deg, ${medalColor(i)}22, ${medalColor(i)}11)` : COLORS.white, borderRadius: 16, padding: 14, marginBottom: 10, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', border: i < 3 ? `2px solid ${medalColor(i)}55` : 'none' }}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div style={{ width: 42, height: 42, borderRadius: 25, background: i < 3 ? medalColor(i) : COLORS.gray, display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 12, fontSize: i < 3 ? 20 : 14, fontWeight: 'bold', color: COLORS.white }}>{medalEmoji(i)}</div>
                         <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 15, fontWeight: 'bold', color: COLORS.darkGray }}>{r.name}</div>
-                          <div style={{ fontSize: 11, color: COLORS.gray }}>{r.rt} • {r.count} lomba</div>
+                          <div style={{ fontSize: fs(15), fontWeight: 'bold', color: COLORS.darkGray }}>{r.name}</div>
+                          <div style={{ fontSize: fs(11), color: COLORS.gray }}>{r.rt} • {r.count} lomba</div>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <div style={{ fontSize: 18, fontWeight: 'bold', color: COLORS.red }}>{r.avg.toFixed(1)}</div>
-                          <div style={{ fontSize: 11, color: COLORS.gray }}>rata-rata</div>
+                          <div style={{ fontSize: fs(18), fontWeight: 'bold', color: COLORS.red }}>{r.avg.toFixed(1)}</div>
+                          <div style={{ fontSize: fs(11), color: COLORS.gray }}>rata-rata</div>
                         </div>
                       </div>
                     </div>
@@ -1077,7 +1138,7 @@ function JuaraScreen({ scores, hadiahMap, lombaHadiah }) {
       )}
 
       <div style={{ padding: '16px 16px 0' }}>
-        <div style={{ fontSize: 18, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 12 }}>📋 Juara Per Lomba</div>
+        <div style={{ fontSize: fs(18), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 12 }}>📋 Juara Per Lomba</div>
         {lombaList.map(l => {
           const participants = getParticipants(l);
           const ranking = getRanking(l).filter(r => r.score !== null);
@@ -1086,12 +1147,12 @@ function JuaraScreen({ scores, hadiahMap, lombaHadiah }) {
           return (
             <div key={l.id} onClick={() => hasData && setSelectedLomba(l)} style={{ background: COLORS.white, borderRadius: 16, padding: 16, marginBottom: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', cursor: hasData ? 'pointer' : 'default', opacity: hasData ? 1 : 0.6 }}>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: hasData ? 12 : 0 }}>
-                <div style={{ fontSize: 32, marginRight: 12 }}>{l.icon}</div>
+                <div style={{ fontSize: fs(32), marginRight: 12 }}>{l.icon}</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 'bold', color: COLORS.darkGray }}>{l.nama}</div>
-                  <div style={{ fontSize: 12, color: COLORS.gray }}>{l.kategori} • {participants.length} peserta</div>
+                  <div style={{ fontSize: fs(15), fontWeight: 'bold', color: COLORS.darkGray }}>{l.nama}</div>
+                  <div style={{ fontSize: fs(12), color: COLORS.gray }}>{l.kategori} • {participants.length} peserta</div>
                 </div>
-                {hasData && <span style={{ fontSize: 24, color: COLORS.gray }}>›</span>}
+                {hasData && <span style={{ fontSize: fs(24), color: COLORS.gray }}>›</span>}
               </div>
               {hasData && [['L', '👦'], ['P', '👧']].map(([jk, icon]) => {
                 const jmlJ = jmlJuara(l, jk);
@@ -1099,15 +1160,15 @@ function JuaraScreen({ scores, hadiahMap, lombaHadiah }) {
                 if (g.length === 0) return null;
                 return (
                   <div key={jk}>
-                    <div style={{ fontSize: 12, fontWeight: 'bold', color: jk === 'L' ? '#4A90D9' : '#E91E63', marginTop: 6, marginBottom: 4 }}>{icon} {jk === 'L' ? 'Laki-laki' : 'Perempuan'}</div>
+                    <div style={{ fontSize: fs(12), fontWeight: 'bold', color: jk === 'L' ? '#4A90D9' : '#E91E63', marginTop: 6, marginBottom: 4 }}>{icon} {jk === 'L' ? 'Laki-laki' : 'Perempuan'}</div>
                     {g.map((r, i) => (
                       <div key={r.id} style={{ padding: '4px 0', borderTop: i > 0 ? `1px solid ${COLORS.lightGray}` : 'none' }}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <span style={{ width: 28, textAlign: 'center', fontSize: 16 }}>{medalEmoji(i)}</span>
-                          <span style={{ flex: 1, fontSize: 13, color: COLORS.darkGray, marginLeft: 6 }}>{r.nama}</span>
-                          <span style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.red }}>{r.score} poin</span>
+                          <span style={{ width: 28, textAlign: 'center', fontSize: fs(16) }}>{medalEmoji(i)}</span>
+                          <span style={{ flex: 1, fontSize: fs(13), color: COLORS.darkGray, marginLeft: 6 }}>{r.nama}</span>
+                          <span style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.red }}>{r.score} poin</span>
                         </div>
-                        <div style={{ marginTop: 2, marginLeft: 34, fontSize: 11, color: medalColor(i), fontWeight: 'bold' }}>
+                        <div style={{ marginTop: 2, marginLeft: 34, fontSize: fs(11), color: medalColor(i), fontWeight: 'bold' }}>
                           {getHadiahLomba(hadiahMap, lombaHadiah, l, jk)[i].icon} {getHadiahLomba(hadiahMap, lombaHadiah, l, jk)[i].hadiah}
                         </div>
                       </div>
@@ -1185,17 +1246,17 @@ function HadiahScreen({ hadiahMap, setHadiahMap, lombaHadiah, setLombaHadiah }) 
   return (
     <div style={{ paddingBottom: 20 }}>
       <div style={{ ...s.header, paddingBottom: 20 }}>
-        <div style={{ fontSize: 50, marginBottom: 5 }}>🎁</div>
+        <div style={{ fontSize: fs(50), marginBottom: 5 }}>🎁</div>
         <div style={s.headerTitle}>Hadiah Juara</div>
-        <div style={{ fontSize: 14, color: COLORS.gold, marginTop: 4 }}>Atur hadiah per lomba & jenis kelamin</div>
+        <div style={{ fontSize: fs(14), color: COLORS.gold, marginTop: 4 }}>Atur hadiah per lomba & jenis kelamin</div>
       </div>
 
       <div style={{ padding: 16 }}>
-        <div style={{ fontSize: 13, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Pilih Kategori:</div>
+        <div style={{ fontSize: fs(13), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Pilih Kategori:</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
           {kategoriLomba.map(k => (
             <button key={k} onClick={() => selectKategori(k)} style={{
-              display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: 12,
+              display: 'flex', alignItems: 'center', padding: '6px 12px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: fs(12),
               background: selectedKat === k ? kategoriColor(k) : COLORS.white,
               color: selectedKat === k ? COLORS.white : COLORS.darkGray,
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
@@ -1207,15 +1268,15 @@ function HadiahScreen({ hadiahMap, setHadiahMap, lombaHadiah, setLombaHadiah }) 
 
         {selectedKat && !selectedLomba && (
           <div>
-            <div style={{ fontSize: 13, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Pilih Lomba ({selectedKat}):</div>
+            <div style={{ fontSize: fs(13), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Pilih Lomba ({selectedKat}):</div>
             {lombaList.filter(l => l.kategori === selectedKat).map(l => (
               <div key={l.id} onClick={() => setSelectedLomba(l)} style={{ display: 'flex', alignItems: 'center', background: COLORS.white, borderRadius: 14, padding: 14, marginBottom: 10, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
-                <div style={{ fontSize: 28, marginRight: 12 }}>{l.icon}</div>
+                <div style={{ fontSize: fs(28), marginRight: 12 }}>{l.icon}</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 'bold', color: COLORS.darkGray }}>{l.nama}</div>
-                  <div style={{ fontSize: 11, color: COLORS.gray }}>{l.waktu}</div>
+                  <div style={{ fontSize: fs(15), fontWeight: 'bold', color: COLORS.darkGray }}>{l.nama}</div>
+                  <div style={{ fontSize: fs(11), color: COLORS.gray }}>{l.waktu}</div>
                 </div>
-                <span style={{ fontSize: 24, color: COLORS.gray }}>›</span>
+                <span style={{ fontSize: fs(24), color: COLORS.gray }}>›</span>
               </div>
             ))}
           </div>
@@ -1224,53 +1285,53 @@ function HadiahScreen({ hadiahMap, setHadiahMap, lombaHadiah, setLombaHadiah }) 
         {selectedLomba && (
           <>
             <div style={{ marginBottom: 12 }}>
-              <button onClick={() => setSelectedLomba(null)} style={{ background: COLORS.lightGray, border: 'none', borderRadius: 10, padding: '8px 14px', cursor: 'pointer', fontSize: 13, fontWeight: 'bold', color: COLORS.darkGray }}>← Pilih Lomba Lain</button>
+              <button onClick={() => setSelectedLomba(null)} style={{ background: COLORS.lightGray, border: 'none', borderRadius: 10, padding: '8px 14px', cursor: 'pointer', fontSize: fs(13), fontWeight: 'bold', color: COLORS.darkGray }}>← Pilih Lomba Lain</button>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', background: COLORS.white, borderRadius: 14, padding: 12, marginBottom: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-              <div style={{ fontSize: 30, marginRight: 12 }}>{selectedLomba.icon}</div>
+              <div style={{ fontSize: fs(30), marginRight: 12 }}>{selectedLomba.icon}</div>
               <div>
-                <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.darkGray }}>{selectedLomba.nama}</div>
-                <div style={{ fontSize: 12, color: COLORS.gray }}>{selectedLomba.kategori} • {selectedLomba.waktu}</div>
+                <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.darkGray }}>{selectedLomba.nama}</div>
+                <div style={{ fontSize: fs(12), color: COLORS.gray }}>{selectedLomba.kategori} • {selectedLomba.waktu}</div>
               </div>
             </div>
 
-            <div style={{ fontSize: 13, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Jenis Kelamin:</div>
+            <div style={{ fontSize: fs(13), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Jenis Kelamin:</div>
             <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
               {[{ key: 'L', label: '👦 Laki-laki' }, { key: 'P', label: '👧 Perempuan' }].map(g => (
                 <button key={g.key} onClick={() => setSelectedJk(g.key)} style={{
                   flex: 1, padding: '10px', borderRadius: 12, border: selectedJk === g.key ? '2px solid ' + (g.key === 'L' ? '#4A90D9' : '#E91E63') : '2px solid transparent',
-                  cursor: 'pointer', fontSize: 14, fontWeight: selectedJk === g.key ? 'bold' : 'normal',
+                  cursor: 'pointer', fontSize: fs(14), fontWeight: selectedJk === g.key ? 'bold' : 'normal',
                   background: selectedJk === g.key ? (g.key === 'L' ? '#E3F2FD' : '#FCE4EC') : COLORS.lightGray,
                   color: COLORS.darkGray
                 }}>{g.label}</button>
               ))}
             </div>
 
-            <div style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 4 }}>{selectedLomba.nama} — {selectedJk === 'L' ? '👦 Laki-laki' : '👧 Perempuan'}</div>
-            <div style={{ fontSize: 12, color: COLORS.gray, marginBottom: 12 }}>
+            <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 4 }}>{selectedLomba.nama} — {selectedJk === 'L' ? '👦 Laki-laki' : '👧 Perempuan'}</div>
+            <div style={{ fontSize: fs(12), color: COLORS.gray, marginBottom: 12 }}>
               {isCustom ? '✏️ Hadiah khusus lomba ini' : '📋 Menggunakan hadiah default kategori'}
             </div>
 
             {DEFAULT_HADIAH.map((h, i) => (
               <div key={i} style={{ background: COLORS.white, borderRadius: 16, padding: 16, marginBottom: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', border: '2px solid ' + hadiahColors[i] + '55' }}>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12 }}>
-                  <div style={{ width: 50, height: 50, borderRadius: 25, background: hadiahColors[i], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, marginRight: 12 }}>{h.icon}</div>
+                  <div style={{ width: 50, height: 50, borderRadius: 25, background: hadiahColors[i], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: fs(26), marginRight: 12 }}>{h.icon}</div>
                   <div>
-                    <div style={{ fontSize: 18, fontWeight: 'bold', color: COLORS.darkGray }}>{h.label}</div>
-                    <div style={{ fontSize: 12, color: COLORS.gray }}>Posisi {h.posisi}</div>
+                    <div style={{ fontSize: fs(18), fontWeight: 'bold', color: COLORS.darkGray }}>{h.label}</div>
+                    <div style={{ fontSize: fs(12), color: COLORS.gray }}>Posisi {h.posisi}</div>
                   </div>
                 </div>
-                <div style={{ fontSize: 13, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Jenis Hadiah:</div>
-                <input value={editValues[i]} onChange={e => setEditValues(editValues.map((v, idx) => idx === i ? e.target.value : v))} style={{ width: '100%', padding: '12px', borderRadius: 12, border: '2px solid ' + COLORS.lightGray, fontSize: 14, outline: 'none', color: COLORS.darkGray, background: COLORS.lightGray, boxSizing: 'border-box' }} placeholder="Tulis hadiah..." />
+                <div style={{ fontSize: fs(13), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 6 }}>Jenis Hadiah:</div>
+                <input value={editValues[i]} onChange={e => setEditValues(editValues.map((v, idx) => idx === i ? e.target.value : v))} style={{ width: '100%', padding: '12px', borderRadius: 12, border: '2px solid ' + COLORS.lightGray, fontSize: fs(14), outline: 'none', color: COLORS.darkGray, background: COLORS.lightGray, boxSizing: 'border-box' }} placeholder="Tulis hadiah..." />
               </div>
             ))}
 
             <div style={{ display: 'flex', gap: 10 }}>
-              <button onClick={handleSave} style={{ flex: 1, padding: 14, borderRadius: 12, background: COLORS.green, color: COLORS.white, fontWeight: 'bold', fontSize: 16, border: 'none', cursor: 'pointer' }}>
+              <button onClick={handleSave} style={{ flex: 1, padding: 14, borderRadius: 12, background: COLORS.green, color: COLORS.white, fontWeight: 'bold', fontSize: fs(16), border: 'none', cursor: 'pointer' }}>
                 {saving ? '✓ Tersimpan!' : 'Simpan Hadiah'}
               </button>
               {isCustom && (
-                <button onClick={deleteOverride} style={{ padding: '14px 20px', borderRadius: 12, background: COLORS.lightGray, color: COLORS.red, fontWeight: 'bold', fontSize: 14, border: 'none', cursor: 'pointer' }}>
+                <button onClick={deleteOverride} style={{ padding: '14px 20px', borderRadius: 12, background: COLORS.lightGray, color: COLORS.red, fontWeight: 'bold', fontSize: fs(14), border: 'none', cursor: 'pointer' }}>
                   Reset ke Default
                 </button>
               )}
@@ -1280,9 +1341,9 @@ function HadiahScreen({ hadiahMap, setHadiahMap, lombaHadiah, setLombaHadiah }) 
 
         {!selectedLomba && !selectedKat && (
           <div style={{ textAlign: 'center', padding: 40, color: COLORS.gray }}>
-            <div style={{ fontSize: 50, marginBottom: 15 }}>👆</div>
-            <div style={{ fontSize: 16, marginBottom: 5 }}>Pilih kategori terlebih dahulu</div>
-            <div style={{ fontSize: 13 }}>Lalu pilih lomba untuk mengatur hadiahnya</div>
+            <div style={{ fontSize: fs(50), marginBottom: 15 }}>👆</div>
+            <div style={{ fontSize: fs(16), marginBottom: 5 }}>Pilih kategori terlebih dahulu</div>
+            <div style={{ fontSize: fs(13) }}>Lalu pilih lomba untuk mengatur hadiahnya</div>
           </div>
         )}
         </div>
@@ -1360,35 +1421,35 @@ function KeuanganScreen({ wargaList, setWargaList, statusBayar, setStatusBayar, 
   return (
     <div style={{ paddingBottom: 20 }}>
       <div style={{ ...s.header, paddingBottom: 20 }}>
-        <div style={{ fontSize: 50, marginBottom: 5 }}>💰</div>
+        <div style={{ fontSize: fs(50), marginBottom: 5 }}>💰</div>
         <div style={s.headerTitle}>Keuangan</div>
-        <div style={{ fontSize: 14, color: COLORS.gold, marginTop: 4 }}>Iuran {fmt(iuranPerWarga)}/warga</div>
+        <div style={{ fontSize: fs(14), color: COLORS.gold, marginTop: 4 }}>Iuran {fmt(iuranPerWarga)}/warga</div>
       </div>
 
       <div style={{ padding: 16, display: 'flex', gap: 8 }}>
         <div style={{ flex: 1, background: COLORS.white, borderRadius: 12, padding: 12, textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
-          <div style={{ fontSize: 11, color: COLORS.gray }}>Target</div>
-          <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.darkGray }}>{fmt(totalIuran)}</div>
+          <div style={{ fontSize: fs(11), color: COLORS.gray }}>Target</div>
+          <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.darkGray }}>{fmt(totalIuran)}</div>
         </div>
         <div style={{ flex: 1, background: COLORS.white, borderRadius: 12, padding: 12, textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
-          <div style={{ fontSize: 11, color: COLORS.gray }}>Terkumpul</div>
-          <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.green }}>{fmt(totalTerkumpul)}</div>
+          <div style={{ fontSize: fs(11), color: COLORS.gray }}>Terkumpul</div>
+          <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.green }}>{fmt(totalTerkumpul)}</div>
         </div>
         <div style={{ flex: 1, background: COLORS.white, borderRadius: 12, padding: 12, textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
-          <div style={{ fontSize: 11, color: COLORS.gray }}>Kurang</div>
-          <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.red }}>{fmt(totalKurang)}</div>
+          <div style={{ fontSize: fs(11), color: COLORS.gray }}>Kurang</div>
+          <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.red }}>{fmt(totalKurang)}</div>
         </div>
       </div>
 
       <div style={{ padding: '0 16px', display: 'flex', gap: 6, marginBottom: 10 }}>
-        <button onClick={exportKeuangan} style={{ flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 'bold', background: COLORS.green, color: COLORS.white, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>📊 Excel</button>
-        <button onClick={exportKeuanganPdf} style={{ flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 'bold', background: COLORS.red, color: COLORS.white, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>📄 PDF</button>
+        <button onClick={exportKeuangan} style={{ flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: fs(13), fontWeight: 'bold', background: COLORS.green, color: COLORS.white, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>📊 Excel</button>
+        <button onClick={exportKeuanganPdf} style={{ flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: fs(13), fontWeight: 'bold', background: COLORS.red, color: COLORS.white, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>📄 PDF</button>
       </div>
 
       <div style={{ padding: '0 16px', display: 'flex', gap: 6 }}>
         {[{ key: 'Semua', label: `Semua (${totalWarga})` }, { key: 'lunas', label: `✅ Lunas (${totalLunas})` }, { key: 'belum', label: `❌ Belum (${totalWarga - totalLunas})` }].map(f => (
           <button key={f.key} onClick={() => setFilterBayar(f.key)} style={{
-            flex: 1, padding: '8px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 'bold',
+            flex: 1, padding: '8px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: fs(12), fontWeight: 'bold',
             background: filterBayar === f.key ? COLORS.red : COLORS.white,
             color: filterBayar === f.key ? COLORS.white : COLORS.darkGray,
             boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
@@ -1406,12 +1467,12 @@ function KeuanganScreen({ wargaList, setWargaList, statusBayar, setStatusBayar, 
           return (
             <div key={g.area} style={{ background: COLORS.white, borderRadius: 16, marginBottom: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
               <div onClick={() => setSelectedArea(selectedArea === g.area ? null : g.area)} style={{ display: 'flex', alignItems: 'center', padding: 16, cursor: 'pointer', background: `linear-gradient(135deg, ${COLORS.red}11, ${COLORS.darkRed}11)` }}>
-                <div style={{ fontSize: 28, marginRight: 12 }}>{g.area === 'Komplek Bawah' ? '⬇️' : g.area === 'Komplek Atas' ? '⬆️' : '📍'}</div>
+                <div style={{ fontSize: fs(28), marginRight: 12 }}>{g.area === 'Komplek Bawah' ? '⬇️' : g.area === 'Komplek Atas' ? '⬆️' : '📍'}</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.darkGray }}>{g.area}</div>
-                  <div style={{ fontSize: 11, color: COLORS.gray }}>{g.warga.length} warga • {lunasArea} lunas • {fmt(terkumpulArea)} / {fmt(totalArea)}</div>
+                  <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.darkGray }}>{g.area}</div>
+                  <div style={{ fontSize: fs(11), color: COLORS.gray }}>{g.warga.length} warga • {lunasArea} lunas • {fmt(terkumpulArea)} / {fmt(totalArea)}</div>
                 </div>
-                <span style={{ fontSize: 24, color: COLORS.gray, transform: selectedArea === g.area ? 'rotate(90deg)' : 'rotate(0deg)', transition: '0.2s' }}>›</span>
+                <span style={{ fontSize: fs(24), color: COLORS.gray, transform: selectedArea === g.area ? 'rotate(90deg)' : 'rotate(0deg)', transition: '0.2s' }}>›</span>
               </div>
               {selectedArea === g.area && (
                 <div style={{ padding: '8px 16px 16px' }}>
@@ -1420,19 +1481,19 @@ function KeuanganScreen({ wargaList, setWargaList, statusBayar, setStatusBayar, 
                     const lunas = statusBayar[`${g.area}-${realIdx}`] === 'lunas';
                     return (
                       <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '8px 0', borderTop: i > 0 ? `1px solid ${COLORS.lightGray}` : 'none' }}>
-                        <div style={{ width: 32, height: 32, borderRadius: 16, background: lunas ? COLORS.green : COLORS.red, display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 10, fontSize: 12, fontWeight: 'bold', color: COLORS.white }}>{realIdx + 1}</div>
-                        <div style={{ flex: 1, fontSize: 14, color: COLORS.darkGray }}>{nama}</div>
-                        <button onClick={() => { setEditIuranVal(String(getNominal(g.area, realIdx))); setShowEditIuranKey(`${g.area}-${realIdx}`); }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 'bold', color: COLORS.blue, marginRight: 8 }}>{fmt(getNominal(g.area, realIdx))} ✏️</button>
+                        <div style={{ width: 32, height: 32, borderRadius: 16, background: lunas ? COLORS.green : COLORS.red, display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 10, fontSize: fs(12), fontWeight: 'bold', color: COLORS.white }}>{realIdx + 1}</div>
+                        <div style={{ flex: 1, fontSize: fs(14), color: COLORS.darkGray }}>{nama}</div>
+                        <button onClick={() => { setEditIuranVal(String(getNominal(g.area, realIdx))); setShowEditIuranKey(`${g.area}-${realIdx}`); }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: fs(11), fontWeight: 'bold', color: COLORS.blue, marginRight: 8 }}>{fmt(getNominal(g.area, realIdx))} ✏️</button>
                         <button onClick={() => toggleBayar(g.area, realIdx)} style={{
-                          padding: '6px 14px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 'bold',
+                          padding: '6px 14px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: fs(12), fontWeight: 'bold',
                           background: lunas ? COLORS.green : COLORS.lightGray,
                           color: lunas ? COLORS.white : COLORS.darkGray,
                           marginRight: 6,
                         }}>
                           {lunas ? '✅ Lunas' : '❌ Belum'}
                         </button>
-                        <button onClick={() => { if (confirm(`Hapus ${nama}?`)) { setWargaList(prev => prev.map(gg => gg.area === g.area ? { ...gg, warga: gg.warga.filter((_, fi) => fi !== realIdx) } : gg)); } }} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 16, background: '#FFE5E5', color: COLORS.red, display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 4 }}>🗑️</button>
-                        <button onClick={() => { setShowEdit({ area: g.area, idx: realIdx }); setEditNama(nama); }} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, background: '#E3F2FD', color: '#4A90D9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✏️</button>
+                        <button onClick={() => { if (confirm(`Hapus ${nama}?`)) { setWargaList(prev => prev.map(gg => gg.area === g.area ? { ...gg, warga: gg.warga.filter((_, fi) => fi !== realIdx) } : gg)); } }} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: fs(16), background: '#FFE5E5', color: COLORS.red, display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 4 }}>🗑️</button>
+                        <button onClick={() => { setShowEdit({ area: g.area, idx: realIdx }); setEditNama(nama); }} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: fs(14), background: '#E3F2FD', color: '#4A90D9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✏️</button>
                       </div>
                     );
                   })}
@@ -1443,17 +1504,17 @@ function KeuanganScreen({ wargaList, setWargaList, statusBayar, setStatusBayar, 
         })}
       </div>
 
-      <button onClick={() => setShowAdd(true)} style={{ position: 'fixed', right: 20, bottom: 80, width: 60, height: 60, borderRadius: 30, background: COLORS.red, color: COLORS.white, fontSize: 30, fontWeight: 'bold', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.3)', zIndex: 100 }}>+</button>
+      <button onClick={() => setShowAdd(true)} style={{ position: 'fixed', right: 24, bottom: 24, width: 60, height: 60, borderRadius: 30, background: COLORS.red, color: COLORS.white, fontSize: fs(30), fontWeight: 'bold', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.3)', zIndex: 100 }}>+</button>
 
       {showAdd && (
         <div onClick={() => setShowAdd(false)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: COLORS.white, borderRadius: 16, padding: 25, width: '85%', maxWidth: 400 }}>
-            <div style={{ fontSize: 22, fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>Tambah Warga</div>
-            <input value={newWarga.nama} onChange={e => setNewWarga({...newWarga, nama: e.target.value})} placeholder="Nama warga..." style={{ width: '100%', border: `1px solid ${COLORS.lightGray}`, borderRadius: 12, padding: 12, fontSize: 14, marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray, boxSizing: 'border-box' }} />
-            <div style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Pilih Area:</div>
+            <div style={{ fontSize: fs(22), fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>Tambah Warga</div>
+            <input value={newWarga.nama} onChange={e => setNewWarga({...newWarga, nama: e.target.value})} placeholder="Nama warga..." style={{ width: '100%', border: `1px solid ${COLORS.lightGray}`, borderRadius: 12, padding: 12, fontSize: fs(14), marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray, boxSizing: 'border-box' }} />
+            <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Pilih Area:</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
               {DATA_KEUANGAN.map(a => (
-                <button key={a.area} onClick={() => setNewWarga({...newWarga, area: a.area})} style={{ display: 'flex', alignItems: 'center', padding: '8px 12px', borderRadius: 20, border: newWarga.area === a.area ? `2px solid ${COLORS.red}` : '2px solid transparent', cursor: 'pointer', fontSize: 12, background: newWarga.area === a.area ? '#FFE5E5' : COLORS.lightGray, color: newWarga.area === a.area ? COLORS.red : COLORS.darkGray }}>{a.area}</button>
+                <button key={a.area} onClick={() => setNewWarga({...newWarga, area: a.area})} style={{ display: 'flex', alignItems: 'center', padding: '8px 12px', borderRadius: 20, border: newWarga.area === a.area ? `2px solid ${COLORS.red}` : '2px solid transparent', cursor: 'pointer', fontSize: fs(12), background: newWarga.area === a.area ? '#FFE5E5' : COLORS.lightGray, color: newWarga.area === a.area ? COLORS.red : COLORS.darkGray }}>{a.area}</button>
               ))}
             </div>
             <div style={{ display: 'flex', gap: 12 }}>
@@ -1467,8 +1528,8 @@ function KeuanganScreen({ wargaList, setWargaList, statusBayar, setStatusBayar, 
       {showEdit && (
         <div onClick={() => setShowEdit(null)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: COLORS.white, borderRadius: 16, padding: 25, width: '85%', maxWidth: 400 }}>
-            <div style={{ fontSize: 22, fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>Edit Warga</div>
-            <input value={editNama} onChange={e => setEditNama(e.target.value)} placeholder="Nama warga..." style={{ width: '100%', border: `1px solid ${COLORS.lightGray}`, borderRadius: 12, padding: 12, fontSize: 14, marginBottom: 20, background: COLORS.lightGray, color: COLORS.darkGray, boxSizing: 'border-box' }} />
+            <div style={{ fontSize: fs(22), fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>Edit Warga</div>
+            <input value={editNama} onChange={e => setEditNama(e.target.value)} placeholder="Nama warga..." style={{ width: '100%', border: `1px solid ${COLORS.lightGray}`, borderRadius: 12, padding: 12, fontSize: fs(14), marginBottom: 20, background: COLORS.lightGray, color: COLORS.darkGray, boxSizing: 'border-box' }} />
             <div style={{ display: 'flex', gap: 12 }}>
               <button onClick={() => setShowEdit(null)} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.lightGray, color: COLORS.darkGray, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>Batal</button>
               <button onClick={() => { if (editNama) { setWargaList(prev => prev.map(gg => gg.area === showEdit.area ? { ...gg, warga: gg.warga.map((w, wi) => wi === showEdit.idx ? editNama : w) } : gg)); setShowEdit(null); } else alert('Isi nama warga'); }} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.red, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>Simpan</button>
@@ -1480,10 +1541,10 @@ function KeuanganScreen({ wargaList, setWargaList, statusBayar, setStatusBayar, 
       {showEditIuranKey && (
         <div onClick={() => setShowEditIuranKey(null)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: COLORS.white, borderRadius: 16, padding: 25, width: '85%', maxWidth: 400 }}>
-            <div style={{ fontSize: 22, fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>Edit Nominal</div>
-            <div style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Nominal yang dibayar orang ini:</div>
-            <input type="number" value={editIuranVal} onChange={e => setEditIuranVal(e.target.value)} placeholder="Contoh: 65000" style={{ width: '100%', border: '1px solid ' + COLORS.lightGray, borderRadius: 12, padding: 12, fontSize: 14, marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray, boxSizing: 'border-box' }} />
-            <div style={{ fontSize: 12, color: COLORS.gray, marginBottom: 16 }}>Isi 0 jika tidak membayar. Total terkumpul dihitung ulang otomatis.</div>
+            <div style={{ fontSize: fs(22), fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>Edit Nominal</div>
+            <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Nominal yang dibayar orang ini:</div>
+            <input type="number" value={editIuranVal} onChange={e => setEditIuranVal(e.target.value)} placeholder="Contoh: 65000" style={{ width: '100%', border: '1px solid ' + COLORS.lightGray, borderRadius: 12, padding: 12, fontSize: fs(14), marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray, boxSizing: 'border-box' }} />
+            <div style={{ fontSize: fs(12), color: COLORS.gray, marginBottom: 16 }}>Isi 0 jika tidak membayar. Total terkumpul dihitung ulang otomatis.</div>
             <div style={{ display: 'flex', gap: 12 }}>
               <button onClick={() => setShowEditIuranKey(null)} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.lightGray, color: COLORS.darkGray, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>Batal</button>
               <button onClick={() => { setIuranMap(prev => ({ ...prev, [showEditIuranKey]: parseInt(editIuranVal) || 0 })); setShowEditIuranKey(null); }} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.red, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>Simpan</button>
@@ -1590,8 +1651,8 @@ function LogistikScreen({ totalTerkumpul }) {
         ['Belanja Logistik', fmt(totalBelanja)],
         ['Sisa Sodakoh', fmt(sisaSodakoh)],
       ],
-      headStyles: { fillColor: [40, 167, 69], fontSize: 9 },
-      styles: { fontSize: 9, cellPadding: 2.5 },
+      headStyles: { fillColor: [40, 167, 69], fontSize: fs(9) },
+      styles: { fontSize: fs(9), cellPadding: 2.5 },
       margin: { left: 14, right: 14 },
     });
     doc.save('Kas_Sodakoh_Iuran.pdf');
@@ -1600,37 +1661,37 @@ function LogistikScreen({ totalTerkumpul }) {
   return (
     <div style={{ paddingBottom: 20 }}>
       <div style={{ ...s.header, paddingBottom: 20 }}>
-        <div style={{ fontSize: 50, marginBottom: 5 }}>📦</div>
+        <div style={{ fontSize: fs(50), marginBottom: 5 }}>📦</div>
         <div style={s.headerTitle}>Logistik</div>
-        <div style={{ fontSize: 14, color: COLORS.gold, marginTop: 4 }}>{tAll} item • {fmt(totalBelanja)} dibeli</div>
+        <div style={{ fontSize: fs(14), color: COLORS.gold, marginTop: 4 }}>{tAll} item • {fmt(totalBelanja)} dibeli</div>
       </div>
 
       <div style={{ padding: '0 16px', display: 'flex', gap: 6, marginBottom: 10 }}>
-        <button onClick={() => setLview('daftar')} style={{ flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 'bold', background: lview === 'daftar' ? COLORS.red : COLORS.white, color: lview === 'daftar' ? COLORS.white : COLORS.darkGray, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>📋 Daftar</button>
-        <button onClick={() => setLview('rekap')} style={{ flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 'bold', background: lview === 'rekap' ? COLORS.red : COLORS.white, color: lview === 'rekap' ? COLORS.white : COLORS.darkGray, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>📊 Rekap</button>
+        <button onClick={() => setLview('daftar')} style={{ flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: fs(13), fontWeight: 'bold', background: lview === 'daftar' ? COLORS.red : COLORS.white, color: lview === 'daftar' ? COLORS.white : COLORS.darkGray, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>📋 Daftar</button>
+        <button onClick={() => setLview('rekap')} style={{ flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: fs(13), fontWeight: 'bold', background: lview === 'rekap' ? COLORS.red : COLORS.white, color: lview === 'rekap' ? COLORS.white : COLORS.darkGray, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>📊 Rekap</button>
       </div>
 
       {lview === 'daftar' && (<div style={{ padding: 16 }}>
         <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
           <div style={{ flex: 1, background: COLORS.white, borderRadius: 12, padding: 12, textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
-            <div style={{ fontSize: 11, color: COLORS.gray }}>Total Item</div>
-            <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.darkGray }}>{tAll}</div>
+            <div style={{ fontSize: fs(11), color: COLORS.gray }}>Total Item</div>
+            <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.darkGray }}>{tAll}</div>
           </div>
           <div style={{ flex: 1, background: COLORS.white, borderRadius: 12, padding: 12, textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
-            <div style={{ fontSize: 11, color: COLORS.gray }}>Sudah Ceklis</div>
-            <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.green }}>{tCek}/{tAll}</div>
+            <div style={{ fontSize: fs(11), color: COLORS.gray }}>Sudah Ceklis</div>
+            <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.green }}>{tCek}/{tAll}</div>
           </div>
           <div style={{ flex: 1, background: COLORS.white, borderRadius: 12, padding: 12, textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
-            <div style={{ fontSize: 11, color: COLORS.gray }}>Belanja Dibeli</div>
-            <div style={{ fontSize: 13, fontWeight: 'bold', color: COLORS.blue }}>{fmt(totalBelanja)}</div>
+            <div style={{ fontSize: fs(11), color: COLORS.gray }}>Belanja Dibeli</div>
+            <div style={{ fontSize: fs(13), fontWeight: 'bold', color: COLORS.blue }}>{fmt(totalBelanja)}</div>
           </div>
         </div>
 
-        <div style={{ fontSize: 12, color: COLORS.gray, marginBottom: 8 }}>Centang ✅ item yang sudah siap. Ketuk ➕ untuk tambah item sendiri.</div>
+        <div style={{ fontSize: fs(12), color: COLORS.gray, marginBottom: 8 }}>Centang ✅ item yang sudah siap. Ketuk ➕ untuk tambah item sendiri.</div>
 
         <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
-          <div style={{ flex: 1, padding: '8px 0', borderRadius: 10, textAlign: 'center', fontSize: 12, fontWeight: 'bold', background: '#E3F2FD', color: COLORS.blue }}>🛒 Beli ({logistikList.filter(function(it) { return it.harga > 0; }).length})</div>
-          <div style={{ flex: 1, padding: '8px 0', borderRadius: 10, textAlign: 'center', fontSize: 12, fontWeight: 'bold', background: COLORS.lightGray, color: COLORS.darkGray }}>🧺 Bawaan ({logistikList.filter(function(it) { return it.harga === 0; }).length})</div>
+          <div style={{ flex: 1, padding: '8px 0', borderRadius: 10, textAlign: 'center', fontSize: fs(12), fontWeight: 'bold', background: '#E3F2FD', color: COLORS.blue }}>🛒 Beli ({logistikList.filter(function(it) { return it.harga > 0; }).length})</div>
+          <div style={{ flex: 1, padding: '8px 0', borderRadius: 10, textAlign: 'center', fontSize: fs(12), fontWeight: 'bold', background: COLORS.lightGray, color: COLORS.darkGray }}>🧺 Bawaan ({logistikList.filter(function(it) { return it.harga === 0; }).length})</div>
         </div>
 
         {[{ key: 'beli', label: '🛒 Beli (pakai iuran)', color: COLORS.blue }, { key: 'bawaan', label: '🧺 Bawaan (tidak beli)', color: COLORS.gray }].map(function(sec) {
@@ -1640,24 +1701,24 @@ function LogistikScreen({ totalTerkumpul }) {
           return (
             <div key={sec.key} style={{ background: COLORS.white, borderRadius: 16, marginBottom: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
               <div style={{ padding: '12px 16px', background: sec.color + '11', borderBottom: '1px solid ' + COLORS.lightGray, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: 15, fontWeight: 'bold', color: COLORS.darkGray }}>{sec.label}</span>
-                <span style={{ fontSize: 12, fontWeight: 'bold', color: sec.color }}>{sec.key === 'beli' ? fmt(subBeli) : items.filter(function(x) { return logCek[x.i]; }).length + '/' + items.length + ' siap'}</span>
+                <span style={{ fontSize: fs(15), fontWeight: 'bold', color: COLORS.darkGray }}>{sec.label}</span>
+                <span style={{ fontSize: fs(12), fontWeight: 'bold', color: sec.color }}>{sec.key === 'beli' ? fmt(subBeli) : items.filter(function(x) { return logCek[x.i]; }).length + '/' + items.length + ' siap'}</span>
               </div>
               {items.length === 0 && (
-                <div style={{ padding: '16px', textAlign: 'center', fontSize: 13, color: COLORS.gray }}>{sec.key === 'beli' ? 'Belum ada item untuk dibeli' : 'Belum ada item bawaan'}</div>
+                <div style={{ padding: '16px', textAlign: 'center', fontSize: fs(13), color: COLORS.gray }}>{sec.key === 'beli' ? 'Belum ada item untuk dibeli' : 'Belum ada item bawaan'}</div>
               )}
               <div style={{ padding: '4px 16px 10px' }}>
                 {items.map(function(x, ri) {
                   const isCek = logCek[x.i];
                   return (
                     <div key={x.i} style={{ display: 'flex', alignItems: 'center', padding: '8px 0', borderTop: ri > 0 ? '1px solid ' + COLORS.lightGray : 'none' }}>
-                      <button onClick={() => toggleCek(x.i)} style={{ width: 34, height: 34, borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 18, background: isCek ? COLORS.green + '22' : COLORS.lightGray, marginRight: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{isCek ? '✅' : '⬜'}</button>
+                      <button onClick={() => toggleCek(x.i)} style={{ width: 34, height: 34, borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: fs(18), background: isCek ? COLORS.green + '22' : COLORS.lightGray, marginRight: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{isCek ? '✅' : '⬜'}</button>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 14, color: COLORS.darkGray, textDecoration: isCek ? 'line-through' : 'none', fontWeight: isCek ? 'normal' : 'bold' }}>{x.it.nama}</div>
-                        <div style={{ fontSize: 11, color: COLORS.gray }}>{x.it.kategori === 'perlengkapan' ? '🧰 Perlengkapan' : x.it.kategori === 'konsumsi' ? '🍽️ Konsumsi' : '🧺 Bawaan'}</div>
+                        <div style={{ fontSize: fs(14), color: COLORS.darkGray, textDecoration: isCek ? 'line-through' : 'none', fontWeight: isCek ? 'normal' : 'bold' }}>{x.it.nama}</div>
+                        <div style={{ fontSize: fs(11), color: COLORS.gray }}>{x.it.kategori === 'perlengkapan' ? '🧰 Perlengkapan' : x.it.kategori === 'konsumsi' ? '🍽️ Konsumsi' : '🧺 Bawaan'}</div>
                       </div>
-                      {sec.key === 'beli' && <span style={{ fontSize: 13, fontWeight: 'bold', color: COLORS.blue, marginRight: 8 }}>{fmt(x.it.harga)}</span>}
-                      <button onClick={() => delLogistik(x.i)} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 16, background: '#FFE5E5', color: COLORS.red, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🗑️</button>
+                      {sec.key === 'beli' && <span style={{ fontSize: fs(13), fontWeight: 'bold', color: COLORS.blue, marginRight: 8 }}>{fmt(x.it.harga)}</span>}
+                      <button onClick={() => delLogistik(x.i)} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: fs(16), background: '#FFE5E5', color: COLORS.red, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🗑️</button>
                     </div>
                   );
                 })}
@@ -1667,21 +1728,21 @@ function LogistikScreen({ totalTerkumpul }) {
         })}
       </div>)}
 
-      <button onClick={() => setShowAddLog(true)} style={{ position: 'fixed', right: 20, bottom: 80, width: 60, height: 60, borderRadius: 30, background: COLORS.blue, color: COLORS.white, fontSize: 30, fontWeight: 'bold', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.3)', zIndex: 100 }}>+</button>
+      <button onClick={() => setShowAddLog(true)} style={{ position: 'fixed', right: 24, bottom: 24, width: 60, height: 60, borderRadius: 30, background: COLORS.blue, color: COLORS.white, fontSize: fs(30), fontWeight: 'bold', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.3)', zIndex: 100 }}>+</button>
 
       {showAddLog && (
         <div onClick={() => setShowAddLog(false)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: COLORS.white, borderRadius: 16, padding: 25, width: '85%', maxWidth: 400 }}>
-            <div style={{ fontSize: 22, fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>Tambah Logistik</div>
-            <input value={newLog.nama} onChange={e => setNewLog({ ...newLog, nama: e.target.value })} placeholder="Nama barang..." style={{ width: '100%', border: '1px solid ' + COLORS.lightGray, borderRadius: 12, padding: 12, fontSize: 14, marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray, boxSizing: 'border-box' }} />
-            <div style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Kategori:</div>
+            <div style={{ fontSize: fs(22), fontWeight: 'bold', color: COLORS.darkGray, textAlign: 'center', marginBottom: 20 }}>Tambah Logistik</div>
+            <input value={newLog.nama} onChange={e => setNewLog({ ...newLog, nama: e.target.value })} placeholder="Nama barang..." style={{ width: '100%', border: '1px solid ' + COLORS.lightGray, borderRadius: 12, padding: 12, fontSize: fs(14), marginBottom: 12, background: COLORS.lightGray, color: COLORS.darkGray, boxSizing: 'border-box' }} />
+            <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Kategori:</div>
             <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
               {[{ key: 'perlengkapan', label: '🧰 Perlengkapan' }, { key: 'konsumsi', label: '🍽️ Konsumsi' }, { key: 'bawaan', label: '🧺 Bawaan' }].map(kt => (
-                <button key={kt.key} onClick={() => setNewLog({ ...newLog, kategori: kt.key })} style={{ flex: 1, padding: '8px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 'bold', background: newLog.kategori === kt.key ? COLORS.red : COLORS.lightGray, color: newLog.kategori === kt.key ? COLORS.white : COLORS.darkGray }}>{kt.label}</button>
+                <button key={kt.key} onClick={() => setNewLog({ ...newLog, kategori: kt.key })} style={{ flex: 1, padding: '8px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: fs(12), fontWeight: 'bold', background: newLog.kategori === kt.key ? COLORS.red : COLORS.lightGray, color: newLog.kategori === kt.key ? COLORS.white : COLORS.darkGray }}>{kt.label}</button>
               ))}
             </div>
-            <div style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Harga (isi 0 jika bawaan / tidak dibeli):</div>
-            <input type="number" value={newLog.harga} onChange={e => setNewLog({ ...newLog, harga: e.target.value })} placeholder="Contoh: 50000" style={{ width: '100%', border: '1px solid ' + COLORS.lightGray, borderRadius: 12, padding: 12, fontSize: 14, marginBottom: 20, background: COLORS.lightGray, color: COLORS.darkGray, boxSizing: 'border-box' }} />
+            <div style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 8 }}>Harga (isi 0 jika bawaan / tidak dibeli):</div>
+            <input type="number" value={newLog.harga} onChange={e => setNewLog({ ...newLog, harga: e.target.value })} placeholder="Contoh: 50000" style={{ width: '100%', border: '1px solid ' + COLORS.lightGray, borderRadius: 12, padding: 12, fontSize: fs(14), marginBottom: 20, background: COLORS.lightGray, color: COLORS.darkGray, boxSizing: 'border-box' }} />
             <div style={{ display: 'flex', gap: 12 }}>
               <button onClick={() => setShowAddLog(false)} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.lightGray, color: COLORS.darkGray, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>Batal</button>
               <button onClick={addLogistik} style={{ flex: 1, padding: 12, borderRadius: 12, background: COLORS.blue, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>Simpan</button>
@@ -1692,16 +1753,16 @@ function LogistikScreen({ totalTerkumpul }) {
 
       {lview === 'rekap' && <div style={{ padding: 16 }}>
         <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
-          <button onClick={exportLogistik} style={{ flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 'bold', background: COLORS.green, color: COLORS.white, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>📊 Excel</button>
-          <button onClick={exportLogistikPdf} style={{ flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 'bold', background: COLORS.red, color: COLORS.white, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>📄 PDF</button>
+          <button onClick={exportLogistik} style={{ flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: fs(13), fontWeight: 'bold', background: COLORS.green, color: COLORS.white, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>📊 Excel</button>
+          <button onClick={exportLogistikPdf} style={{ flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: fs(13), fontWeight: 'bold', background: COLORS.red, color: COLORS.white, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>📄 PDF</button>
         </div>
         <div style={{ background: COLORS.white, borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', marginBottom: 16 }}>
           <div style={{ padding: '14px 16px', background: 'linear-gradient(135deg, ' + COLORS.red + '11, ' + COLORS.darkRed + '11)', borderBottom: '1px solid ' + COLORS.lightGray }}>
-            <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.darkGray }}>📦 Rekap Logistik</div>
-            <div style={{ fontSize: 12, color: COLORS.gray, marginTop: 2 }}>{tAll + ' item • ' + tCek + ' siap • ' + fmt(totalBelanja) + ' dibeli'}</div>
+            <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.darkGray }}>📦 Rekap Logistik</div>
+            <div style={{ fontSize: fs(12), color: COLORS.gray, marginTop: 2 }}>{tAll + ' item • ' + tCek + ' siap • ' + fmt(totalBelanja) + ' dibeli'}</div>
           </div>
           <div style={{ padding: 12 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 4px', borderBottom: '2px solid ' + COLORS.lightGray, fontSize: 12, fontWeight: 'bold', color: COLORS.gray }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 4px', borderBottom: '2px solid ' + COLORS.lightGray, fontSize: fs(12), fontWeight: 'bold', color: COLORS.gray }}>
               <span>Kategori</span>
               <span style={{ display: 'flex', gap: 12 }}><span>Item</span><span>Siap</span><span>Belanja</span></span>
             </div>
@@ -1716,21 +1777,21 @@ function LogistikScreen({ totalTerkumpul }) {
               });
               return (
                 <div key={kt.key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 4px', borderBottom: '1px solid ' + COLORS.lightGray }}>
-                  <span style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray }}>{kt.label}</span>
+                  <span style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray }}>{kt.label}</span>
                   <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                    <span style={{ fontSize: 13, color: COLORS.darkGray, width: 40, textAlign: 'right' }}>{kItems}</span>
-                    <span style={{ fontSize: 13, color: COLORS.green, width: 40, textAlign: 'right' }}>{kCek}</span>
-                    <span style={{ fontSize: 13, fontWeight: 'bold', color: kBeli > 0 ? COLORS.blue : COLORS.gray, width: 90, textAlign: 'right' }}>{kBeli > 0 ? fmt(kBeli) : '-'}</span>
+                    <span style={{ fontSize: fs(13), color: COLORS.darkGray, width: 40, textAlign: 'right' }}>{kItems}</span>
+                    <span style={{ fontSize: fs(13), color: COLORS.green, width: 40, textAlign: 'right' }}>{kCek}</span>
+                    <span style={{ fontSize: fs(13), fontWeight: 'bold', color: kBeli > 0 ? COLORS.blue : COLORS.gray, width: 90, textAlign: 'right' }}>{kBeli > 0 ? fmt(kBeli) : '-'}</span>
                   </div>
                 </div>
               );
             })}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 4px 4px', borderTop: '2px solid ' + COLORS.darkGray }}>
-              <span style={{ fontSize: 15, fontWeight: 'bold', color: COLORS.darkGray }}>TOTAL</span>
+              <span style={{ fontSize: fs(15), fontWeight: 'bold', color: COLORS.darkGray }}>TOTAL</span>
               <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                <span style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.darkGray, width: 40, textAlign: 'right' }}>{tAll}</span>
-                <span style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.green, width: 40, textAlign: 'right' }}>{tCek}</span>
-                <span style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.blue, width: 90, textAlign: 'right' }}>{fmt(totalBelanja)}</span>
+                <span style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.darkGray, width: 40, textAlign: 'right' }}>{tAll}</span>
+                <span style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.green, width: 40, textAlign: 'right' }}>{tCek}</span>
+                <span style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.blue, width: 90, textAlign: 'right' }}>{fmt(totalBelanja)}</span>
               </div>
             </div>
           </div>
@@ -1738,42 +1799,42 @@ function LogistikScreen({ totalTerkumpul }) {
 
         <div style={{ background: COLORS.white, borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', marginBottom: 16 }}>
           <div style={{ padding: '14px 16px', background: 'linear-gradient(135deg, ' + COLORS.green + '11, ' + COLORS.darkRed + '11)', borderBottom: '1px solid ' + COLORS.lightGray }}>
-            <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.darkGray }}>💸 Kas Sodakoh Iuran</div>
+            <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.darkGray }}>💸 Kas Sodakoh Iuran</div>
           </div>
           <div style={{ padding: 16 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 4px', borderBottom: '1px solid ' + COLORS.lightGray }}>
-              <span style={{ fontSize: 14, color: COLORS.darkGray }}>Iuran Terkumpul</span>
-              <span style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.green }}>{fmt(totalTerkumpul)}</span>
+              <span style={{ fontSize: fs(14), color: COLORS.darkGray }}>Iuran Terkumpul</span>
+              <span style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.green }}>{fmt(totalTerkumpul)}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 4px', borderBottom: '1px solid ' + COLORS.lightGray }}>
-              <span style={{ fontSize: 14, color: COLORS.darkGray }}>Belanja Logistik (dibeli)</span>
-              <span style={{ fontSize: 14, fontWeight: 'bold', color: COLORS.blue }}>− {fmt(totalBelanja)}</span>
+              <span style={{ fontSize: fs(14), color: COLORS.darkGray }}>Belanja Logistik (dibeli)</span>
+              <span style={{ fontSize: fs(14), fontWeight: 'bold', color: COLORS.blue }}>− {fmt(totalBelanja)}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 4px 4px' }}>
-              <span style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.darkGray }}>Sisa Sodakoh</span>
-              <span style={{ fontSize: 18, fontWeight: 'bold', color: sisaSodakoh >= 0 ? COLORS.green : COLORS.red }}>{fmt(sisaSodakoh)}</span>
+              <span style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.darkGray }}>Sisa Sodakoh</span>
+              <span style={{ fontSize: fs(18), fontWeight: 'bold', color: sisaSodakoh >= 0 ? COLORS.green : COLORS.red }}>{fmt(sisaSodakoh)}</span>
             </div>
           </div>
         </div>
 
         <div style={{ background: COLORS.white, borderRadius: 16, padding: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-          <div style={{ fontSize: 16, fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 12 }}>📊 Ringkasan Kategori</div>
+          <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.darkGray, marginBottom: 12 }}>📊 Ringkasan Kategori</div>
           <div style={{ display: 'flex', gap: 12 }}>
             <div style={{ flex: 1, textAlign: 'center', padding: 12, background: COLORS.cream, borderRadius: 12 }}>
-              <div style={{ fontSize: 11, color: COLORS.gray }}>Total Item</div>
-              <div style={{ fontSize: 24, fontWeight: 'bold', color: COLORS.darkGray }}>{tAll}</div>
+              <div style={{ fontSize: fs(11), color: COLORS.gray }}>Total Item</div>
+              <div style={{ fontSize: fs(24), fontWeight: 'bold', color: COLORS.darkGray }}>{tAll}</div>
             </div>
             <div style={{ flex: 1, textAlign: 'center', padding: 12, background: COLORS.cream, borderRadius: 12 }}>
-              <div style={{ fontSize: 11, color: COLORS.gray }}>Perlengkapan</div>
-              <div style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.blue }}>{tPL}</div>
+              <div style={{ fontSize: fs(11), color: COLORS.gray }}>Perlengkapan</div>
+              <div style={{ fontSize: fs(20), fontWeight: 'bold', color: COLORS.blue }}>{tPL}</div>
             </div>
             <div style={{ flex: 1, textAlign: 'center', padding: 12, background: COLORS.cream, borderRadius: 12 }}>
-              <div style={{ fontSize: 11, color: COLORS.gray }}>Konsumsi</div>
-              <div style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.green }}>{tKM}</div>
+              <div style={{ fontSize: fs(11), color: COLORS.gray }}>Konsumsi</div>
+              <div style={{ fontSize: fs(20), fontWeight: 'bold', color: COLORS.green }}>{tKM}</div>
             </div>
             <div style={{ flex: 1, textAlign: 'center', padding: 12, background: COLORS.cream, borderRadius: 12 }}>
-              <div style={{ fontSize: 11, color: COLORS.gray }}>Bawaan</div>
-              <div style={{ fontSize: 20, fontWeight: 'bold', color: '#FF9800' }}>{tBW}</div>
+              <div style={{ fontSize: fs(11), color: COLORS.gray }}>Bawaan</div>
+              <div style={{ fontSize: fs(20), fontWeight: 'bold', color: '#FF9800' }}>{tBW}</div>
             </div>
           </div>
         </div>
@@ -1784,6 +1845,7 @@ function LogistikScreen({ totalTerkumpul }) {
 
 export default function App() {
   const [tab, setTab] = useState('home');
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 900);
   const [scores, setScores] = useState({});
   const [hadiahMap, setHadiahMap] = useState({});
   const [lombaHadiah, setLombaHadiah] = useState(LOMBA_HADIAH_AWAL);
@@ -1791,6 +1853,13 @@ export default function App() {
   const [wargaList, setWargaList] = useState(DATA_KEUANGAN.map(g => ({ ...g, warga: [...g.warga] })));
   const [iuranPerWarga, setIuranPerWarga] = useState(65000);
   const [iuranMap, setIuranMap] = useState({});
+
+  useEffect(() => {
+    const onResize = () => setIsDesktop(window.innerWidth >= 900);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   const totalTerkumpul = wargaList.reduce((s, g) => s + g.warga.reduce((acc, _, i) => {
     const k = `${g.area}-${i}`;
     if (statusBayar[k] === 'lunas') return acc + (iuranMap[k] !== undefined ? iuranMap[k] : iuranPerWarga);
@@ -1820,16 +1889,55 @@ export default function App() {
   ];
 
   return (
-    <div style={s.container}>
-      <div style={{ flex: 1 }}>{screens[tab]}</div>
-      <div style={{ display: 'flex', background: `linear-gradient(135deg, ${COLORS.red}, ${COLORS.darkRed})`, paddingBottom: 10, paddingTop: 8, boxShadow: '0 -4px 12px rgba(0,0,0,0.3)' }}>
-        {tabs.map(t => (
-          <button key={t.key} onClick={() => setTab(t.key)} style={{ ...s.tab, ...(tab === t.key ? s.tabActive : {}) }}>
-            <div style={{ fontSize: 22 }}>{t.icon}</div>
-            <div style={{ marginTop: 2 }}>{t.label}</div>
-          </button>
-        ))}
-      </div>
-    </div>
+    <>
+      <style>{`
+        @keyframes riFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-btn { background: transparent; color: rgba(255,255,255,0.85); transition: all 0.2s ease; }
+        .nav-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+        .nav-btn.on { background: #fff; color: ${COLORS.red}; box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+        .nav-btn.on .nav-icon { transform: scale(1.12); }
+        .screen-anim { animation: riFade 0.25s ease; }
+      `}</style>
+      {isDesktop ? (
+        <div style={{ minHeight: '100vh', display: 'flex', background: COLORS.cream }}>
+          <div style={{ width: 200, flexShrink: 0, background: `linear-gradient(180deg, ${COLORS.red} 0%, ${COLORS.darkRed} 100%)`, padding: '20px 12px', display: 'flex', flexDirection: 'column', boxShadow: '4px 0 18px rgba(0,0,0,0.25)', position: 'fixed', top: 0, bottom: 0, left: 0, zIndex: 100 }}>
+            <div style={{ textAlign: 'center', marginBottom: 24, padding: '10px 0 14px', borderBottom: '2px solid rgba(255,255,255,0.3)' }}>
+              <div style={{ fontSize: fs(36), marginBottom: 6, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}>🇮🇩</div>
+              <div style={{ fontSize: fs(16), fontWeight: 'bold', color: COLORS.white, letterSpacing: 1 }}>17 AGUSTUS</div>
+              <div style={{ fontSize: fs(11), color: COLORS.gold, letterSpacing: 2, marginTop: 4 }}>2026</div>
+            </div>
+            {tabs.map(t => (
+              <button
+                key={t.key}
+                onClick={() => setTab(t.key)}
+                className={`nav-btn${tab === t.key ? ' on' : ''}`}
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 12px', marginBottom: 4, borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: fs(13), fontWeight: tab === t.key ? 'bold' : 'normal', textAlign: 'left' }}
+              >
+                <div className="nav-icon" style={{ fontSize: fs(20), width: 26, textAlign: 'center', transition: '0.2s' }}>{t.icon}</div>
+                <div>{t.label}</div>
+              </button>
+            ))}
+            <div style={{ marginTop: 'auto', textAlign: 'center', padding: '14px 4px 4px', borderTop: '1px solid rgba(255,255,255,0.25)', fontSize: fs(11), color: 'rgba(255,255,255,0.7)' }}>
+              Dirgahayu RI 🇮🇩
+            </div>
+          </div>
+          <div style={{ flex: 1, marginLeft: 200, display: 'flex', justifyContent: 'center' }}>
+            <div className="screen-anim" key={tab} style={{ width: '100%', maxWidth: 1000 }}>{screens[tab]}</div>
+          </div>
+        </div>
+      ) : (
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: COLORS.cream }}>
+          <div className="screen-anim" key={tab} style={{ flex: 1 }}>{screens[tab]}</div>
+          <div style={{ display: 'flex', background: `linear-gradient(135deg, ${COLORS.red}, ${COLORS.darkRed})`, paddingBottom: 10, paddingTop: 8, boxShadow: '0 -4px 12px rgba(0,0,0,0.3)', position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100 }}>
+            {tabs.map(t => (
+              <button key={t.key} onClick={() => setTab(t.key)} style={{ flex: 1, textAlign: 'center', padding: '6px 0', cursor: 'pointer', border: 'none', background: 'none', color: tab === t.key ? COLORS.gold : COLORS.white, fontSize: fs(10), fontWeight: tab === t.key ? 'bold' : 'normal', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                <span style={{ fontSize: fs(20), lineHeight: 1 }}>{t.icon}</span>
+                <span>{t.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
