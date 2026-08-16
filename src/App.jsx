@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -229,6 +229,29 @@ const PESERTA_LIST = [
 
 const fs = (n) => Math.round(n * 1.18);
 
+const LS_PREFIX = 'agustus_';
+
+const loadLS = (key, fallback) => {
+  try {
+    const raw = window.localStorage.getItem(LS_PREFIX + key);
+    return raw === null ? fallback : JSON.parse(raw);
+  } catch {
+    return fallback;
+  }
+};
+
+const saveLS = (key, value) => {
+  try {
+    window.localStorage.setItem(LS_PREFIX + key, JSON.stringify(value));
+  } catch {}
+};
+
+const usePersistedState = (key, initial) => {
+  const [state, setState] = useState(() => loadLS(key, typeof initial === 'function' ? initial() : initial));
+  useEffect(() => saveLS(key, state), [key, state]);
+  return [state, setState];
+};
+
 const s = {
   container: { minHeight: '100vh', display: 'flex', flexDirection: 'column', background: COLORS.cream },
   header: { background: `linear-gradient(135deg, ${COLORS.red} 0%, ${COLORS.darkRed} 60%, #8B0000 100%)`, paddingTop: 50, paddingBottom: 30, textAlign: 'center', borderBottomLeftRadius: 30, borderBottomRightRadius: 30, boxShadow: '0 4px 20px rgba(204,0,0,0.3)', position: 'relative' },
@@ -352,15 +375,14 @@ function HomeScreen({ onNavigate }) {
 const EMOJI_OPTIONS = ['🏃','🧗','🍘','🥄','🪢','🩴','⚽','🏐','🎯','🎪','🎮','🎤','🎨','🧩','♟️','🏅','🎲','🤸'];
 
 function LombaScreen() {
-  const [jadwal, setJadwal] = useState(JADWAL_LINTAS);
+  const [jadwal, setJadwal] = usePersistedState('jadwal', JADWAL_LINTAS);
   const [selected, setSelected] = useState(null);
   const [filterKategori, setFilterKategori] = useState('Semua');
   const [showEdit, setShowEdit] = useState(false);
   const [editItem, setEditItem] = useState(null);
   const [form, setForm] = useState({});
   const [now, setNow] = useState(new Date());
-  const [stopwatch, setStopwatch] = useState({ running: false, elapsed: 0, lombaId: null });
-  const swRef = useRef(null);
+  const [sw, setSw] = usePersistedState('sw', {});
 
   useEffect(() => {
     const iv = setInterval(() => setNow(new Date()), 1000);
@@ -368,27 +390,44 @@ function LombaScreen() {
   }, []);
 
   useEffect(() => {
-    if (stopwatch.running) {
-      swRef.current = setInterval(() => {
-        setStopwatch(prev => ({ ...prev, elapsed: prev.elapsed + 1 }));
-      }, 1000);
-    } else {
-      clearInterval(swRef.current);
-    }
-    return () => clearInterval(swRef.current);
-  }, [stopwatch.running]);
+    const iv = setInterval(() => {
+      setSw(prev => {
+        const runningIds = Object.entries(prev).filter(([, v]) => v && v.running);
+        if (runningIds.length === 0) return prev;
+        const next = {};
+        Object.entries(prev).forEach(([id, v]) => {
+          next[id] = v.running ? { ...v, elapsed: v.elapsed + 1 } : v;
+        });
+        return next;
+      });
+    }, 1000);
+    return () => clearInterval(iv);
+  }, [setSw]);
 
-  const startStopwatch = (lombaId) => {
-    setStopwatch({ running: true, elapsed: 0, lombaId });
+  const startSw = (id) => {
+    setSw(prev => ({ ...prev, [id]: { running: true, elapsed: 0, records: prev[id]?.records || [] } }));
   };
 
-  const stopStopwatch = () => {
-    setStopwatch(prev => ({ ...prev, running: false }));
+  const stopSw = (id) => {
+    setSw(prev => {
+      const cur = prev[id] || { running: false, elapsed: 0, records: [] };
+      if (!cur.running) return prev;
+      return { ...prev, [id]: { running: false, elapsed: 0, records: [...cur.records, cur.elapsed] } };
+    });
   };
 
-  const resetStopwatch = () => {
-    setStopwatch({ running: false, elapsed: 0, lombaId: null });
+  const resetSw = (id) => {
+    setSw(prev => ({ ...prev, [id]: { running: false, elapsed: 0, records: [] } }));
   };
+
+  const getSw = (id) => sw[id] || { running: false, elapsed: 0, records: [] };
+
+  const swLast = (id) => {
+    const records = getSw(id).records;
+    return records.length ? fmtSw(records[records.length - 1]) : null;
+  };
+
+  const swTotal = (id) => fmtSw(getSw(id).records.reduce((a, b) => a + b, 0));
 
   const fmtSw = (secs) => {
     const h = Math.floor(secs / 3600);
@@ -460,6 +499,7 @@ function LombaScreen() {
   const semuaKategori = [...new Set(JADWAL_LINTAS.map(j => j.kategori))];
 
   const filtered = filterKategori === 'Semua' ? jadwal : jadwal.filter(j => j.kategori === filterKategori);
+  const runningItems = jadwal.filter(j => getSw(j.id).running);
 
   const tipeColor = (tipe) => {
     switch (tipe) {
@@ -542,17 +582,24 @@ function LombaScreen() {
           </div>
         )}
 
-        {stopwatch.running && (
-          <div style={{ background: 'linear-gradient(135deg, #FFF3E0, #FFE0B2)', borderRadius: 12, padding: 14, marginBottom: 12, border: `2px solid ${COLORS.orange}`, textAlign: 'center' }}>
-            <div style={{ fontSize: fs(11), fontWeight: 'bold', color: COLORS.orange, marginBottom: 4 }}>⏱️ STOPWATCH {jadwal.find(j => j.id === stopwatch.lombaId)?.nama || ''}</div>
-            <div style={{ fontSize: fs(36), fontWeight: 'bold', color: COLORS.darkGray, fontVariantNumeric: 'tabular-nums' }}>{fmtSw(stopwatch.elapsed)}</div>
-            <button onClick={stopStopwatch} style={{ marginTop: 8, padding: '8px 20px', borderRadius: 10, background: COLORS.orange, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: fs(12) }}>BERHENTI</button>
-            <button onClick={resetStopwatch} style={{ marginTop: 8, marginLeft: 8, padding: '8px 20px', borderRadius: 10, background: COLORS.gray, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: fs(12) }}>RESET</button>
+        {runningItems.length > 0 && (
+          <div style={{ background: 'linear-gradient(135deg, #FFF3E0, #FFE0B2)', borderRadius: 12, padding: 12, marginBottom: 12, border: `2px solid ${COLORS.orange}` }}>
+            <div style={{ fontSize: fs(11), fontWeight: 'bold', color: COLORS.orange, marginBottom: 6, textAlign: 'center' }}>⏱️ {runningItems.length} STOPWATCH BERJALAN</div>
+            {runningItems.map(j => {
+              const ss = getSw(j.id);
+              return (
+                <div key={j.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 8px', background: COLORS.white, borderRadius: 8, marginBottom: 6, boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+                  <div style={{ fontSize: fs(12), fontWeight: 'bold', color: COLORS.darkGray }}>{j.icon} {j.nama}</div>
+                  <div style={{ fontSize: fs(18), fontWeight: 'bold', color: COLORS.orange, fontVariantNumeric: 'tabular-nums' }}>{fmtSw(ss.elapsed)}</div>
+                </div>
+              );
+            })}
           </div>
         )}
         {filtered.map((item, idx) => {
           const status = getStatus(item);
           const isCurrent = status === 'sedang_berlangsung';
+          const ss = getSw(item.id);
           return (
           <div key={item.id} onClick={() => setSelected(item)} style={{ display: 'flex', marginBottom: 2, cursor: 'pointer' }}>
             <div style={{ width: 50, display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
@@ -571,14 +618,29 @@ function LombaScreen() {
                 </div>
                 <span style={{ ...s.badge(tipeColor(item.tipe)), fontSize: fs(10), padding: '2px 8px' }}>{item.kategori}</span>
               </div>
-              {isCurrent && item.tipe === 'lomba' && !stopwatch.running && (
-                <button onClick={(e) => { e.stopPropagation(); startStopwatch(item.id); }} style={{ marginTop: 8, padding: '6px 14px', borderRadius: 8, background: COLORS.orange, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: fs(11) }}>⏱️ Mulai Stopwatch</button>
-              )}
               {isCurrent && getTimeLeft(item) !== null && (
                 <div style={{ marginTop: 6, fontSize: fs(12), fontWeight: 'bold', color: getTimeLeft(item) < 0 ? '#DC3545' : statusColor('sedang_berlangsung'), fontVariantNumeric: 'tabular-nums' }}>
                   {getTimeLeft(item) < 0 ? '⚠️ Lebih ' : 'Sisa: '}{fmtCountdown(getTimeLeft(item))}
                 </div>
               )}
+              <div onClick={(e) => e.stopPropagation()} style={{ marginTop: 10, padding: '8px 10px', borderRadius: 10, background: ss.running ? '#FFF8E1' : COLORS.white, border: ss.running ? `2px solid ${COLORS.orange}` : '1px solid rgba(0,0,0,0.08)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: fs(14), fontWeight: 'bold', color: ss.running ? COLORS.orange : COLORS.darkGray, fontVariantNumeric: 'tabular-nums' }}>
+                    ⏱️ {ss.running ? fmtSw(ss.elapsed) : (ss.records.length ? `Sesi lalu: ${swLast(item.id)}` : 'Stopwatch')}
+                  </div>
+                  {ss.records.length > 0 && (
+                    <div style={{ fontSize: fs(10), color: COLORS.gray, marginTop: 2 }}>Total {ss.records.length} sesi: {swTotal(item.id)}</div>
+                  )}
+                </div>
+                {!ss.running ? (
+                  <button onClick={() => startSw(item.id)} style={{ padding: '6px 14px', borderRadius: 8, background: COLORS.orange, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: fs(11), flexShrink: 0 }}>▶ Mulai</button>
+                ) : (
+                  <>
+                    <button onClick={() => stopSw(item.id)} style={{ padding: '6px 14px', borderRadius: 8, background: COLORS.green, color: COLORS.white, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: fs(11), flexShrink: 0 }}>⏹ Stop</button>
+                    <button onClick={() => resetSw(item.id)} style={{ padding: '6px 12px', borderRadius: 8, background: COLORS.lightGray, color: COLORS.darkGray, fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: fs(11), flexShrink: 0 }}>↩ Reset</button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
           );
@@ -649,7 +711,7 @@ function LombaScreen() {
 }
 
 function PesertaScreen() {
-  const [pesertaList, setPesertaList] = useState([...PESERTA_LIST]);
+  const [pesertaList, setPesertaList] = usePersistedState('peserta', PESERTA_LIST);
   const [search, setSearch] = useState('');
   const [filterJk, setFilterJk] = useState('Semua');
   const [filterGrup, setFilterGrup] = useState('Semua');
@@ -1559,8 +1621,8 @@ function KeuanganScreen({ wargaList, setWargaList, statusBayar, setStatusBayar, 
 
 function LogistikScreen({ totalTerkumpul }) {
   const [lview, setLview] = useState('daftar');
-  const [logCek, setLogCek] = useState({});
-  const [logistikList, setLogistikList] = useState(DATA_LOGISTIK.map(it => ({ ...it })));
+  const [logCek, setLogCek] = usePersistedState('logCek', {});
+  const [logistikList, setLogistikList] = usePersistedState('logistik', DATA_LOGISTIK.map(it => ({ ...it })));
   const [showAddLog, setShowAddLog] = useState(false);
   const [newLog, setNewLog] = useState({ nama: '', kategori: 'perlengkapan', harga: 0 });
 
@@ -1846,13 +1908,13 @@ function LogistikScreen({ totalTerkumpul }) {
 export default function App() {
   const [tab, setTab] = useState('home');
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 900);
-  const [scores, setScores] = useState({});
-  const [hadiahMap, setHadiahMap] = useState({});
-  const [lombaHadiah, setLombaHadiah] = useState(LOMBA_HADIAH_AWAL);
-  const [statusBayar, setStatusBayar] = useState(STATUS_AWAL);
-  const [wargaList, setWargaList] = useState(DATA_KEUANGAN.map(g => ({ ...g, warga: [...g.warga] })));
-  const [iuranPerWarga, setIuranPerWarga] = useState(65000);
-  const [iuranMap, setIuranMap] = useState({});
+  const [scores, setScores] = usePersistedState('scores', {});
+  const [hadiahMap, setHadiahMap] = usePersistedState('hadiahMap', {});
+  const [lombaHadiah, setLombaHadiah] = usePersistedState('lombaHadiah', LOMBA_HADIAH_AWAL);
+  const [statusBayar, setStatusBayar] = usePersistedState('statusBayar', STATUS_AWAL);
+  const [wargaList, setWargaList] = usePersistedState('wargaList', () => DATA_KEUANGAN.map(g => ({ ...g, warga: [...g.warga] })));
+  const [iuranPerWarga, setIuranPerWarga] = usePersistedState('iuranPerWarga', 65000);
+  const [iuranMap, setIuranMap] = usePersistedState('iuranMap', {});
 
   useEffect(() => {
     const onResize = () => setIsDesktop(window.innerWidth >= 900);
